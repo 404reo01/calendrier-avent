@@ -44,3 +44,7 @@ règles :
    --hard`, `push --force`, suppression de branche) : la conséquence en une
    phrase, puis attends un oui.
 9. Après chaque action Git, résume en deux phrases simples ce qui a été fait.
+
+## Règles du projet
+
+Lis aussi `CONVENTIONS.md` (code propre et sécurité) et le plan `.to-do/calendrier-avent.md` avant d'écrire du code.

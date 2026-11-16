@@ -9,3 +9,5 @@ dist/
 Thumbs.db
 *.log
 .claude/settings.local.json
+contenu/cases.json
+dist/
