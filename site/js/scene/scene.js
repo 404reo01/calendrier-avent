@@ -6,6 +6,7 @@ import { creerCiel } from "./ciel.js";
 import { creerFlamme, creerLivre, creerLueur } from "./livre.js";
 import { creerMoment } from "./moment.js";
 import { creerMateriaux, creerNef } from "./nef.js";
+import { brancherOrientation, creerParallaxe } from "./parallaxe.js";
 import { creerRendu } from "./rendu.js";
 import { attendrePolices } from "./textures.js";
 
@@ -15,18 +16,20 @@ const DEBIT_MINIMUM = 24;
 const RAYON_CLIC = 24;
 
 // Deux cadrages : large (le ciel au-dessus de la nef) et vertical sur téléphone (le ciel en haut, le pupitre en bas).
+// La caméra de repos est à hauteur d'yeux et lève le regard : les rayonnages filent hors champ, le ciel domine.
+// La pose « près » s'arrête à quelques mètres du pupitre, pour que le livre soit grand à l'écran.
 const CADRAGES = {
   large: {
     fov: 50,
-    base: { position: new THREE.Vector3(0, 2.0, 14), regard: new THREE.Vector3(0, 10.5, -20) },
-    pres: { position: new THREE.Vector3(0, 3.3, -2.2), regard: new THREE.Vector3(0, 3.6, -11) },
+    base: { position: new THREE.Vector3(0, 1.5, 14), regard: new THREE.Vector3(0, 14.6, -30) },
+    pres: { position: new THREE.Vector3(0, 3.4, -11.4), regard: new THREE.Vector3(0, 2.9, -16) },
     constellation: { cx: 0.05, cy: 0.5, ex: 0.6, ey: 0.34 },
   },
   vertical: {
     fov: 66,
-    base: { position: new THREE.Vector3(0, 1.9, 6.5), regard: new THREE.Vector3(0, 10, -20) },
-    pres: { position: new THREE.Vector3(0, 3.2, -3.2), regard: new THREE.Vector3(0, 4.2, -11) },
-    constellation: { cx: 0, cy: 0.52, ex: 0.78, ey: 0.32 },
+    base: { position: new THREE.Vector3(0, 1.5, 8), regard: new THREE.Vector3(0, 14, -30) },
+    pres: { position: new THREE.Vector3(0, 3.3, -12.2), regard: new THREE.Vector3(0, 2.8, -16) },
+    constellation: { cx: 0, cy: 0.5, ex: 0.84, ey: 0.38 },
   },
 };
 
@@ -51,6 +54,7 @@ function libererTout(...racines) {
       for (const materiau of [objet.material].flat().filter(Boolean)) {
         materiau.map?.dispose();
         materiau.gradientMap?.dispose();
+        materiau.uniforms?.uAtlas?.value.dispose();
         materiau.dispose();
       }
       if (objet.isInstancedMesh) objet.dispose();
@@ -65,14 +69,14 @@ function construire(cases, reduit) {
     uRatio: { value: 1 },
     uTemps: { value: 0.6 },
   };
+  // Pas de brouillard three.js : la brume est posée dans la passe finale, d'après la profondeur (rendu.js).
   const monde = new THREE.Scene();
-  monde.fog = new THREE.Fog("#1f4362", 22, 75);
   const vivant = new THREE.Scene();
   const materiaux = creerMateriaux();
   const livre = creerLivre(materiaux);
   const ciel = creerCiel({ cases, reduit, partages });
   const lueur = creerLueur(partages);
-  monde.add(creerNef(materiaux), livre.groupe, ciel.dome);
+  monde.add(creerNef(materiaux, { reduit }), livre.groupe, ciel.dome);
   vivant.add(...ciel.vivants, creerFlamme(partages), lueur.objet);
   return { partages, monde, vivant, livre, ciel, lueur };
 }
@@ -107,6 +111,10 @@ export async function creerScene({ conteneur, grille, reduit, mouvementReduit })
     estFige: () => etat.fixe || etat.reduit,
   });
   if (mouvementReduit) boucle.definirAmbiance(false);
+  const parallaxe = creerParallaxe({
+    camera, pose: cadrage.base, boucle, rendu,
+    peutBouger: () => !etat.fixe && !etat.reduit && !moment.estOuvert() && !moment.estOccupe(),
+  });
 
   const arret = new AbortController();
   const signal = { signal: arret.signal };
@@ -129,6 +137,7 @@ export async function creerScene({ conteneur, grille, reduit, mouvementReduit })
       ciel.placer(camera, cadrage.constellation);
       camera.position.copy(pose);
       camera.quaternion.copy(quaternion);
+      parallaxe.oublier();
       moment.replacer();
     }
     rendu.invalider();
@@ -195,14 +204,22 @@ export async function creerScene({ conteneur, grille, reduit, mouvementReduit })
       const jour = cibleSous(evenement);
       if (jour) boutonDuJour(jour)?.click();
     }, signal);
-    if (!matchMedia("(hover: hover)").matches) return;
+    if (!matchMedia("(hover: hover)").matches) {
+      brancherOrientation(parallaxe, arret.signal);
+      return;
+    }
     canvas.addEventListener("pointermove", (evenement) => {
+      const cadre = canvas.getBoundingClientRect();
+      parallaxe.viser(((evenement.clientX - cadre.left) / cadre.width) * 2 - 1, 1 - ((evenement.clientY - cadre.top) / cadre.height) * 2);
       const jour = cibleSous(evenement);
       const bouton = jour && boutonDuJour(jour);
       canvas.style.cursor = bouton ? (bouton.dataset.etat === "fermee" ? "not-allowed" : "pointer") : "";
       survoler(jour);
     }, signal);
-    canvas.addEventListener("pointerleave", () => survoler(null), signal);
+    canvas.addEventListener("pointerleave", () => {
+      parallaxe.viser(0, 0);
+      survoler(null);
+    }, signal);
   }
 
   function brancherEvenements() {
@@ -221,6 +238,11 @@ export async function creerScene({ conteneur, grille, reduit, mouvementReduit })
     matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", (e) => {
       etat.reduit = e.matches;
       boucle.definirAmbiance(!e.matches && !etat.fixe);
+      // Mouvement réduit : la caméra revient d'un coup à sa place, et n'en bouge plus.
+      if (e.matches) {
+        parallaxe.oublier();
+        moment.replacer();
+      }
     }, signal);
     canvas.addEventListener("webglcontextlost", detruire, signal);
   }
@@ -258,6 +280,8 @@ export async function creerScene({ conteneur, grille, reduit, mouvementReduit })
   if (debit < DEBIT_MINIMUM) {
     etat.fixe = true;
     boucle.definirAmbiance(false);
+    parallaxe.oublier();
+    moment.replacer();
     conteneur.classList.add("est-fixe");
   }
 }

@@ -1,0 +1,32 @@
+/* Plein écran pendant le moment d'ouverture : la scène couvre toute la fenêtre le temps
+   de l'animation, puis reprend sa place (classe posée et retirée par js/main.js).
+   Seuls transform et opacity s'animent (règle de performance du projet). */
+#scene.scene-plein-ecran {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  aspect-ratio: auto;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  animation: scene-plein-ecran-entree 0.35s ease-out;
+}
+
+/* La page ne défile pas sous la scène pendant le moment. */
+html.moment-en-cours,
+html.moment-en-cours body {
+  overflow: hidden;
+}
+
+@keyframes scene-plein-ecran-entree {
+  from { opacity: 0.6; transform: scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #scene.scene-plein-ecran { animation: none; }
+}

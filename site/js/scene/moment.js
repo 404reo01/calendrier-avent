@@ -101,8 +101,12 @@ export function creerMoment({ boucle, rendu, camera, poses, livre, ciel, lueur, 
   }
 
   // Une seule animation à la fois : chaque demande attend la précédente.
+  // `enAttente` compte les actions pas encore finies : la parallaxe ne touche pas la caméra pendant ce temps.
+  let enAttente = 0;
   function enchainer(action) {
-    enCours = enCours.then(action, action);
+    enAttente += 1;
+    const suivie = () => Promise.resolve(action()).finally(() => { enAttente -= 1; });
+    enCours = enCours.then(suivie, suivie);
     return enCours;
   }
 
@@ -112,5 +116,6 @@ export function creerMoment({ boucle, rendu, camera, poses, livre, ciel, lueur, 
     // La caméra de repos a changé (redimensionnement) : on la remet en place si rien n'est ouvert.
     replacer() { if (!ouvert) poserCamera(poses.base.position, poses.base.regard); },
     estOuvert: () => ouvert,
+    estOccupe: () => enAttente > 0,
   };
 }

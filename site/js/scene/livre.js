@@ -90,7 +90,8 @@ export function creerFlamme(partages) {
         vec2 p = gl_PointCoord * 2.0 - 1.0;
         p.y += 0.15;
         float goutte = smoothstep(0.32, 0.0, length(vec2(p.x * (1.9 + p.y * 1.2), p.y * 0.85 + 0.05)) * 1.0 / vVacille);
-        float halo = exp(-dot(p, p) * 3.2) * 0.6 * vVacille;
+        // Le halo s'éteint avant le bord du point : de près, sinon, on verrait le carré du sprite.
+        float halo = exp(-dot(p, p) * 3.2) * 0.6 * vVacille * smoothstep(1.0, 0.6, length(p));
         vec3 c = vec3(1.0, 0.86, 0.55) * goutte * 1.6 + vec3(1.0, 0.62, 0.25) * halo;
         gl_FragColor = vec4(c, 1.0);
         #include <colorspace_fragment>

@@ -1,7 +1,7 @@
 // Le rendu en deux temps, pour que l'ambiance ne coûte presque rien :
 // 1. la nef (immobile) est dessinée dans une texture, seulement quand quelque chose y bouge ;
-// 2. à chaque image, une seule passe plein écran pose le trait d'encre (arêtes lues dans la profondeur),
-//    le lavis et le grain du papier, puis les éléments vivants (étoiles, flamme, lueur) s'ajoutent par-dessus.
+// 2. à chaque image, une seule passe plein écran pose la brume (perspective atmosphérique, d'après
+//    la profondeur), le trait d'encre (arêtes lues dans la profondeur), le lavis et le grain du papier, puis les éléments vivants (étoiles, flamme, lueur) s'ajoutent par-dessus.
 // Pas de calque CSS en mode de fusion : tout se passe dans le canvas.
 import * as THREE from "../../vendor/three.module.min.js";
 
@@ -9,7 +9,7 @@ const PASSE_FINALE = /* glsl */ `
   uniform sampler2D uCouleur, uProfondeur;
   uniform vec2 uResolution;
   uniform float uRatio, uProche, uLoin;
-  uniform vec3 uEncre;
+  uniform vec3 uEncre, uBrume;
   varying vec2 vUv;
 
   float h(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
@@ -39,6 +39,17 @@ const PASSE_FINALE = /* glsl */ `
     encre *= 0.65 + 0.5 * bruit(gl_FragCoord.xy * 0.45);
 
     vec3 col = texture2D(uCouleur, vUv).rgb;
+    // Perspective atmosphérique : plus c'est loin, plus la nef se dilue dans un bleu pâle, et l'encre avec.
+    // Le ciel (profondeur vide) n'en reçoit pas : il reste net au-dessus de la brume.
+    float vide = step(0.99999, texture2D(uProfondeur, vUv).r);
+    float brume = (1.0 - vide) * 0.6 * (1.0 - exp(-max(distance - 12.0, 0.0) * 0.03));
+    // La brume ne tombe pas en aplat : le lavis la rend inégale, comme une seconde couche d'eau.
+    brume *= 0.85 + 0.3 * fbm(gl_FragCoord.xy / uRatio * 0.004 + 9.0);
+    col = mix(col, uBrume, clamp(brume, 0.0, 1.0));
+    // Repoussoir : le premier plan est posé un ton plus sombre, comme en illustration ; avec la brume
+    // du fond, l'écart de valeurs creuse la profondeur.
+    col *= mix(1.0, mix(0.74, 1.0, smoothstep(5.0, 24.0, distance)), 1.0 - vide);
+    encre *= 1.0 - 0.75 * brume;
     // Lavis : la couche d'aquarelle n'est jamais régulière, et ses bords de flaque foncent un peu.
     vec2 ecran = gl_FragCoord.xy / uRatio;
     float lavis = fbm(ecran * 0.006);
@@ -82,6 +93,7 @@ export function creerRendu({ renderer, monde, vivant, camera, partages }) {
       uProche: { value: camera.near },
       uLoin: { value: camera.far },
       uEncre: { value: new THREE.Color("#0b1233") },
+      uBrume: { value: new THREE.Color("#47698d") },
     },
     vertexShader: "varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }",
     fragmentShader: PASSE_FINALE,

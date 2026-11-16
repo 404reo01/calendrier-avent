@@ -2,6 +2,7 @@
 // aucune image), des milliers d'étoiles qui scintillent, et la constellation des 24 skills.
 import * as THREE from "../../vendor/three.module.min.js";
 import { hasard } from "./geometrie.js";
+import { creerNumeros } from "./numeros.js";
 
 const BRUIT_GLSL = /* glsl */ `
   float hash3(vec3 p) { p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
@@ -210,8 +211,13 @@ export function creerCiel({ cases, reduit, partages }) {
   const dome = creerDome();
   const fond = creerEtoilesFond(reduit ? 2200 : 4500, partages);
   // Sur téléphone, les étoiles rapetissent : la spirale tient dans un cadre étroit.
-  const etoiles = creerPointsConstellation(cases, partages, reduit ? 30 : 40);
+  const tailleEtoile = reduit ? 30 : 40;
+  const etoiles = creerPointsConstellation(cases, partages, tailleEtoile);
   const traits = creerTraits();
+  const numeros = creerNumeros({
+    partages, tailleEtoile, taille: reduit ? 30 : 34,
+    etats: etoiles.geometry.attributes.aEtat, allumages: etoiles.geometry.attributes.aAllumage,
+  });
   const positions = Array.from({ length: 24 }, () => new THREE.Vector3());
   const traces = new Float32Array(23); // avancement du trait i → i+1 (0 à 1)
   const allumage = etoiles.geometry.attributes.aAllumage;
@@ -230,7 +236,7 @@ export function creerCiel({ cases, reduit, partages }) {
 
   return {
     dome,
-    vivants: [fond, traits, etoiles],
+    vivants: [fond, traits, etoiles, numeros.objet],
     positions,
     // Place la constellation dans le cadre de la caméra de repos, à 48 m : toujours dans le ciel visible.
     placer(camera, cadre) {
@@ -242,6 +248,7 @@ export function creerCiel({ cases, reduit, partages }) {
       });
       tampon.needsUpdate = true;
       majTraits();
+      numeros.placer(positions, camera);
     },
     allumage: (jour) => allumage.array[jour - 1],
     definirAllumage(jour, valeur) { allumage.array[jour - 1] = valeur; allumage.needsUpdate = true; },

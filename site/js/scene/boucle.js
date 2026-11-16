@@ -70,6 +70,11 @@ export function creerBoucle({ rendre, ambiance }) {
         planifier();
       });
     },
+    // Une animation sans durée fixe : `etape(maintenant)` est appelée à chaque image tant qu'elle rend vrai.
+    suivre(etape) {
+      animations.add(etape);
+      planifier();
+    },
     definirAmbiance(active) {
       ambianceActive = active;
       demander();

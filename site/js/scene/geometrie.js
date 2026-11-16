@@ -69,6 +69,26 @@ export function arcEnTube(largeur, naissance, rayonTube, poser) {
   });
 }
 
+// Un arc brisé surbaissé taillé dans une dalle : un bandeau plein de `bas` à `haut`, évidé par
+// dessous d'un intrados pointu de flèche `fleche`. Sert aux arcades sous les coursives et à la passerelle.
+// Construit dans le plan xy (centré en x = 0), épais de `epaisseur` le long de z.
+export function arcDalle(largeur, bas, haut, fleche, epaisseur, pas = 18) {
+  const forme = new THREE.Shape();
+  const demi = largeur / 2;
+  forme.moveTo(-demi, haut);
+  forme.lineTo(demi, haut);
+  forme.lineTo(demi, bas);
+  for (let i = 1; i < pas; i += 1) {
+    const u = 1 - (2 * i) / pas; // de 1 à -1
+    // Départ vertical aux naissances, deux courbes qui se rejoignent en pointe à la clé.
+    forme.lineTo(u * demi, bas + fleche * (1 - Math.abs(u)) ** 0.6);
+  }
+  forme.lineTo(-demi, bas);
+  forme.lineTo(-demi, haut);
+  const g = new THREE.ExtrudeGeometry(forme, { depth: epaisseur, bevelEnabled: false });
+  return g.translate(0, 0, -epaisseur / 2);
+}
+
 // Pseudo-aléatoire déterministe : la même scène à chaque visite.
 export function hasard(graine) {
   let etat = (graine * 2654435761) % 4294967296;

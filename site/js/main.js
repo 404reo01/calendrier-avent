@@ -48,6 +48,41 @@ function annoncerOuverture(jour) {
   return Promise.race([Promise.allSettled(attentes), plafond]);
 }
 
+// Quand on ouvre une case depuis la carte du ciel (en bas de page), on remonte vers la
+// scène et on la passe en plein écran le temps du moment 3D, pour qu'il se voie en entier.
+// Rien de tout cela sans scène 3D active (pas de WebGL, mouvement réduit, image fixe).
+const MOUVEMENT_REDUIT = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+function sceneActive() {
+  const scene = document.getElementById("scene");
+  return scene && scene.querySelector("canvas") && !MOUVEMENT_REDUIT.matches ? scene : null;
+}
+
+function attendreFinDefilement(delaiMax = 900) {
+  return new Promise((resoudre) => {
+    const fin = () => { window.removeEventListener("scrollend", fin); resoudre(); };
+    window.addEventListener("scrollend", fin, { once: true });
+    setTimeout(fin, delaiMax); // navigateurs sans « scrollend » : on n'attend pas plus
+  });
+}
+
+async function mettreLaSceneEnScene() {
+  const scene = sceneActive();
+  if (!scene) return () => {};
+  const rect = scene.getBoundingClientRect();
+  const visible = rect.top >= -rect.height * 0.25 && rect.bottom <= window.innerHeight + rect.height * 0.25;
+  if (!visible) {
+    scene.scrollIntoView({ behavior: "smooth", block: "center" });
+    await attendreFinDefilement();
+  }
+  scene.classList.add("scene-plein-ecran");
+  document.documentElement.classList.add("moment-en-cours");
+  return () => {
+    scene.classList.remove("scene-plein-ecran");
+    document.documentElement.classList.remove("moment-en-cours");
+  };
+}
+
 function demarrerOuverture(panneau) {
   let etatCourant = null;
   let ouvertureEnCours = false;
@@ -71,7 +106,12 @@ function demarrerOuverture(panneau) {
     try {
       const donnees = await chargerCase(jeton);
       effacerMessage();
-      await annoncerOuverture(caseEtat.jour);
+      const sortirDuPleinEcran = await mettreLaSceneEnScene();
+      try {
+        await annoncerOuverture(caseEtat.jour);
+      } finally {
+        sortirDuPleinEcran();
+      }
       panneau.ouvrir(donnees, caseEtat.jour, bouton);
     } catch {
       annoncer(`Impossible de charger la case ${caseEtat.jour}. Réessayez dans un instant.`, { erreur: true });
