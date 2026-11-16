@@ -78,8 +78,22 @@ async function cli() {
     const maintenant = i === -1 ? new Date() : new Date(argv[i + 1]);
     if (Number.isNaN(maintenant.getTime())) throw new Error('--maintenant invalide : donnez une date ISO 8601 avec fuseau.');
     const cle = lireCle();
-    const interdites = await casesInterditesPourCli({ maintenant, reglages: reglagesDepuisEnv(), cle });
-    const fuites = await verifierFuite({ sortie: join(RACINE, 'dist'), casesInterdites: interdites, cle });
+    const reglages = reglagesDepuisEnv();
+    const interdites = await casesInterditesPourCli({ maintenant, reglages, cle });
+    const sortie = join(RACINE, 'dist');
+    // Deux contrôles distincts. Le jeton (adresse) ne dépend que du jour : en accéléré,
+    // la case de DÉMO n° 1 est publiée à la même adresse que la vraie case n° 1.
+    // - par le TEXTE : toutes les cases interdites (vraies en accéléré, et non dues) ;
+    // - par l'ADRESSE : seulement les jours encore fermés, sinon la démo publiée
+    //   serait prise pour une fuite de la vraie case du même jour.
+    const fermees = new Set(etatsDesCases(maintenant, reglages).cases.filter((c) => c.etat === 'fermee').map((c) => c.jour));
+    const parTexte = await verifierFuite({ sortie, casesInterdites: interdites });
+    const parAdresse = await verifierFuite({ sortie, casesInterdites: interdites.filter((c) => fermees.has(c.jour)), cle });
+    const vues = new Set();
+    const fuites = [...parTexte, ...parAdresse].filter((f) => {
+      const k = `${f.fichier}\0${f.jour}`;
+      return vues.has(k) ? false : vues.add(k);
+    });
     if (fuites.length === 0) {
       console.log(`Aucune fuite : ${interdites.length} case(s) interdite(s) recherchée(s) dans dist/.`);
       return;
