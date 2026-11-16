@@ -1,0 +1,12 @@
+{
+  "jour": 10,
+  "titre": "[DÉMO] Recherche web",
+  "skill": {
+    "nom": "skill-demo-10",
+    "source": "Contenu de démonstration (inventé)",
+    "lien": "https://example.com/skill-demo"
+  },
+  "accroche": "[DÉMO] Contenu inventé pour tester l'affichage de la case 10.",
+  "exemple": "[DÉMO] Exemple fictif.\nOn demande à l'agent de faire « recherche web » et il répond en quelques lignes.",
+  "essayer": "[DÉMO] Dites simplement à votre agent ce que vous voulez obtenir. Ceci n'est pas un vrai mode d'emploi."
+}

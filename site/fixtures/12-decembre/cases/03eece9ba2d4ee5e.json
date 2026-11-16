@@ -1,0 +1,13 @@
+{
+  "jour": 6,
+  "titre": "[DÉMO] Revue de sécurité",
+  "skill": {
+    "nom": "skill-demo-6",
+    "source": "Contenu de démonstration (inventé)",
+    "lien": "https://example.com/skill-demo"
+  },
+  "accroche": "[DÉMO] Contenu inventé pour tester l'affichage de la case 6.",
+  "exemple": "[DÉMO] Exemple fictif.\nOn demande à l'agent de faire « revue de sécurité » et il répond en quelques lignes.",
+  "essayer": "[DÉMO] Dites simplement à votre agent ce que vous voulez obtenir. Ceci n'est pas un vrai mode d'emploi.",
+  "avis": "[DÉMO] Un avis fictif, présent une case sur trois."
+}

@@ -1,0 +1,120 @@
+/* Tous les choix visuels vivent dans ces tokens : le thème final ne remplace que :root. */
+:root {
+  color-scheme: light dark;
+
+  --couleur-fond: #f6f6f4;
+  --couleur-surface: #ffffff;
+  --couleur-texte: #1d1d1f;
+  --couleur-texte-discret: #55555c;
+  --couleur-bordure: #8a8a94;
+  --couleur-accent: #2a4fa8;
+  --couleur-accent-texte: #ffffff;
+  --couleur-fond-ouverte: #ffffff;
+  --couleur-fond-du-jour: #e4ecfb;
+  --couleur-fond-fermee: #ececea;
+  --couleur-demo-fond: #fff0c2;
+  --couleur-demo-texte: #4a3900;
+  --couleur-erreur: #a3201f;
+  --couleur-voile: rgb(0 0 0 / 0.5);
+  --couleur-focus: #1b3a8a;
+
+  --police-texte: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --police-titre: var(--police-texte);
+
+  --taille-petite: 0.8125rem;
+  --taille-base: 1rem;
+  --taille-moyenne: 1.125rem;
+  --taille-titre: clamp(1.5rem, 5vw, 2.25rem);
+  --interligne: 1.55;
+
+  --espace-1: 0.25rem;
+  --espace-2: 0.5rem;
+  --espace-3: 0.75rem;
+  --espace-4: 1rem;
+  --espace-5: 1.5rem;
+  --espace-6: 2.5rem;
+
+  --rayon: 0.5rem;
+  --epaisseur-bordure: 1px;
+  --epaisseur-focus: 3px;
+  --largeur-page: 52rem;
+  --duree: 180ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --couleur-fond: #16161a;
+    --couleur-surface: #1f1f25;
+    --couleur-texte: #f1f1f3;
+    --couleur-texte-discret: #b4b4bd;
+    --couleur-bordure: #7a7a86;
+    --couleur-accent: #8fb0ff;
+    --couleur-accent-texte: #0c1530;
+    --couleur-fond-ouverte: #1f1f25;
+    --couleur-fond-du-jour: #223056;
+    --couleur-fond-fermee: #26262c;
+    --couleur-demo-fond: #4a3900;
+    --couleur-demo-texte: #ffe9a8;
+    --couleur-erreur: #ff9c97;
+    --couleur-focus: #b9ceff;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--couleur-fond);
+  color: var(--couleur-texte);
+  font-family: var(--police-texte);
+  font-size: var(--taille-base);
+  line-height: var(--interligne);
+}
+
+.page {
+  display: grid;
+  gap: var(--espace-5);
+  max-width: var(--largeur-page);
+  margin-inline: auto;
+  padding: var(--espace-5) var(--espace-4) var(--espace-6);
+}
+
+.entete { display: grid; gap: var(--espace-2); }
+.titre-page {
+  margin: 0;
+  font-family: var(--police-titre);
+  font-size: var(--taille-titre);
+  line-height: 1.2;
+}
+.intro { margin: 0; max-width: 60ch; color: var(--couleur-texte-discret); }
+
+.bandeau-demo {
+  margin: 0;
+  padding: var(--espace-2) var(--espace-4);
+  background: var(--couleur-demo-fond);
+  color: var(--couleur-demo-texte);
+  font-size: var(--taille-petite);
+  text-align: center;
+}
+
+.message {
+  margin: 0;
+  padding: var(--espace-3) var(--espace-4);
+  border: var(--epaisseur-bordure) solid var(--couleur-bordure);
+  border-radius: var(--rayon);
+  background: var(--couleur-surface);
+}
+.message.est-erreur { border-color: var(--couleur-erreur); color: var(--couleur-erreur); }
+
+:focus-visible {
+  outline: var(--epaisseur-focus) solid var(--couleur-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

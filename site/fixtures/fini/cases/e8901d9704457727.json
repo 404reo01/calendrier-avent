@@ -1,0 +1,12 @@
+{
+  "jour": 19,
+  "titre": "[DÉMO] Journal de bord",
+  "skill": {
+    "nom": "skill-demo-19",
+    "source": "Contenu de démonstration (inventé)",
+    "lien": "https://example.com/skill-demo"
+  },
+  "accroche": "[DÉMO] Contenu inventé pour tester l'affichage de la case 19.",
+  "exemple": "[DÉMO] Exemple fictif.\nOn demande à l'agent de faire « journal de bord » et il répond en quelques lignes.",
+  "essayer": "[DÉMO] Dites simplement à votre agent ce que vous voulez obtenir. Ceci n'est pas un vrai mode d'emploi."
+}

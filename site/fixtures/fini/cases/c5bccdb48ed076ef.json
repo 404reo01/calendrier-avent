@@ -1,0 +1,13 @@
+{
+  "jour": 9,
+  "titre": "[DÉMO] Diagrammes",
+  "skill": {
+    "nom": "skill-demo-9",
+    "source": "Contenu de démonstration (inventé)",
+    "lien": "https://example.com/skill-demo"
+  },
+  "accroche": "[DÉMO] Contenu inventé pour tester l'affichage de la case 9.",
+  "exemple": "[DÉMO] Exemple fictif.\nOn demande à l'agent de faire « diagrammes » et il répond en quelques lignes.",
+  "essayer": "[DÉMO] Dites simplement à votre agent ce que vous voulez obtenir. Ceci n'est pas un vrai mode d'emploi.",
+  "avis": "[DÉMO] Un avis fictif, présent une case sur trois."
+}

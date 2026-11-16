@@ -18,7 +18,11 @@ Un calendrier de l'Avent en ligne, en 3D, pour le **grand public**. Ses 24 cases
 - [ ] G5 — `npm test` passe en local et dans le robot.
 - [ ] G6 — L'historique compte au moins 4 points de sauvegarde, avec des légendes en français. Aucun secret, ni dans l'historique, ni dans les fichiers.
 
-## 2. Décisions à trancher par Rayan (avant de coder les parties concernées)
+## 2. Décisions
+
+**Tranché le 2026-11-16** : T2 = d (chiffré dans le dépôt) · T3 = mot de fin + cases relisibles · T4 = **aucune vraie case n'est révélée avant décembre, même pendant la soirée** : le mode accéléré publie un jeu de **cases de démo** séparé (`contenu/demo.json`, sans secret, suivi par Git) ; les vraies cases ne s'ouvrent qu'en mode normal · T5 = public · T6 = 7 h (défaut, non contredit). T1 en attente du moodboard.
+
+Tableau d'origine :
 
 | # | Question | Options | Recommandation de l'orchestrateur | Bloque |
 |---|---|---|---|---|
@@ -56,7 +60,7 @@ Secret : `CLE_CALENDRIER` = 32 octets en base64. C'est le seul secret du projet.
 
 **Contrat C2 — Moteur** `etatsDesCases(maintenant: Date, reglages) → { mode, aujourdhui: n|null, cases: [{ jour: 1..24, etat: "ouverte"|"du-jour"|"fermee", ouvertureLe: ISO }] , fini: bool }`
 - Normal : la case *j* est due quand `maintenant ≥ j décembre à HEURE_OUVERTURE, heure de Paris`. Les années se calculent à partir de `maintenant`.
-- Accéléré : la case *j* est due quand `maintenant ≥ DEPART_ACCELERE + (j-1) × 5 min`.
+- Accéléré : la case *j* est due quand `maintenant ≥ DEPART_ACCELERE + (j-1) × 5 min`. **Source = `contenu/demo.json`** (cases de démo), jamais les vraies cases (T4). `etat.json` porte `mode: "accelere"` et le site affiche un bandeau « Mode démo ».
 - « du-jour » = la plus haute case due, si elle a été ouverte dans les dernières 24 h (normal) ou les dernières 5 min (accéléré) ; sinon aucune. Au plus une.
 - Fonction pure et déterministe : même entrée, même sortie. Relancer deux fois ne change rien, et un passage sauté est rattrapé au suivant.
 

@@ -1,0 +1,155 @@
+{
+  "mode": "normal",
+  "saison": 2026,
+  "aujourdhui": null,
+  "fini": true,
+  "cases": [
+    {
+      "jour": 1,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-01T06:00:00.000Z"
+    },
+    {
+      "jour": 2,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-02T06:00:00.000Z"
+    },
+    {
+      "jour": 3,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-03T06:00:00.000Z"
+    },
+    {
+      "jour": 4,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-04T06:00:00.000Z"
+    },
+    {
+      "jour": 5,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-05T06:00:00.000Z"
+    },
+    {
+      "jour": 6,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-06T06:00:00.000Z"
+    },
+    {
+      "jour": 7,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-07T06:00:00.000Z"
+    },
+    {
+      "jour": 8,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-08T06:00:00.000Z"
+    },
+    {
+      "jour": 9,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-09T06:00:00.000Z"
+    },
+    {
+      "jour": 10,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-10T06:00:00.000Z"
+    },
+    {
+      "jour": 11,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-11T06:00:00.000Z"
+    },
+    {
+      "jour": 12,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-12T06:00:00.000Z"
+    },
+    {
+      "jour": 13,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-13T06:00:00.000Z"
+    },
+    {
+      "jour": 14,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-14T06:00:00.000Z"
+    },
+    {
+      "jour": 15,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-15T06:00:00.000Z"
+    },
+    {
+      "jour": 16,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-16T06:00:00.000Z"
+    },
+    {
+      "jour": 17,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-17T06:00:00.000Z"
+    },
+    {
+      "jour": 18,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-18T06:00:00.000Z"
+    },
+    {
+      "jour": 19,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-19T06:00:00.000Z"
+    },
+    {
+      "jour": 20,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-20T06:00:00.000Z"
+    },
+    {
+      "jour": 21,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-21T06:00:00.000Z"
+    },
+    {
+      "jour": 22,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-22T06:00:00.000Z"
+    },
+    {
+      "jour": 23,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-23T06:00:00.000Z"
+    },
+    {
+      "jour": 24,
+      "etat": "ouverte",
+      "ouvertureLe": "2026-12-24T06:00:00.000Z"
+    }
+  ],
+  "jetons": {
+    "1": "d5ca45b2b9768630",
+    "2": "e746c4123d841995",
+    "3": "b6b0173697566574",
+    "4": "2b0077e2f9087aab",
+    "5": "ebc790c0df44d28b",
+    "6": "a8be81c6d8fe4b66",
+    "7": "c2a583535a500213",
+    "8": "98e45eda79dde259",
+    "9": "c5bccdb48ed076ef",
+    "10": "bd82b8ec7ccd9f59",
+    "11": "701754e395c648e3",
+    "12": "72834f47dc4d2b95",
+    "13": "56aa000b6689eac7",
+    "14": "2d971e6afe692124",
+    "15": "f8203044d7353bc1",
+    "16": "dcf44bc0f764c39f",
+    "17": "8b37b8adb12b7b8b",
+    "18": "5b1dce547f0d07f5",
+    "19": "e8901d9704457727",
+    "20": "bf337d1874d669e7",
+    "21": "7a305e3574f9cb23",
+    "22": "65391668f3f31f13",
+    "23": "de51019d221e9ae3",
+    "24": "d7a1b950de6f03e6"
+  },
+  "genereLe": "2026-01-01T00:00:00.000Z"
+}

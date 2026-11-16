@@ -1,0 +1,43 @@
+.panneau {
+  width: min(40rem, calc(100% - 2 * var(--espace-4)));
+  max-height: calc(100dvh - 2 * var(--espace-4));
+  padding: 0;
+  border: var(--epaisseur-bordure) solid var(--couleur-bordure);
+  border-radius: var(--rayon);
+  background: var(--couleur-surface);
+  color: var(--couleur-texte);
+}
+.panneau::backdrop { background: var(--couleur-voile); }
+.panneau[open] { animation: apparition var(--duree) ease-out; }
+
+@keyframes apparition { from { opacity: 0; } to { opacity: 1; } }
+
+.panneau-corps { display: grid; gap: var(--espace-4); padding: var(--espace-5) var(--espace-4); }
+.panneau-titre { margin: 0; font-family: var(--police-titre); font-size: var(--taille-titre); line-height: 1.2; }
+.panneau-jour { margin: 0; color: var(--couleur-texte-discret); font-size: var(--taille-petite); }
+.panneau-accroche { margin: 0; font-size: var(--taille-moyenne); }
+
+.panneau-bloc { display: grid; gap: var(--espace-2); }
+.panneau-bloc h3 { margin: 0; font-size: var(--taille-base); }
+.panneau-bloc p { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
+
+.panneau-skill {
+  padding: var(--espace-3);
+  border: var(--epaisseur-bordure) solid var(--couleur-bordure);
+  border-radius: var(--rayon);
+}
+
+.panneau-lien { color: var(--couleur-accent); }
+
+.panneau-fermer {
+  justify-self: start;
+  min-height: 2.75rem;
+  padding: var(--espace-2) var(--espace-4);
+  border: 0;
+  border-radius: var(--rayon);
+  background: var(--couleur-accent);
+  color: var(--couleur-accent-texte);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}

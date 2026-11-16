@@ -1,0 +1,15 @@
+{
+  "name": "calendrier-avent-making-of",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Calendrier de l'Avent en 3D : 24 skills d'agent IA qui ont servi à le construire.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "construire": "node scripts/construire.mjs",
+    "chiffrer": "node --env-file-if-exists=.env scripts/chiffrer.mjs",
+    "verifier-fuite": "node scripts/verifier-fuite.mjs",
+    "servir": "node scripts/servir.mjs"
+  }
+}

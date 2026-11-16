@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>Calendrier de l'Avent des skills</title>
+  <meta name="description" content="24 skills d'agent IA, un par jour du 1er au 24 décembre : ceux qui ont servi à construire ce calendrier.">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/grille.css">
+  <link rel="stylesheet" href="styles/panneau.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <p class="bandeau-demo" id="bandeau-demo" hidden>Mode démo : une case s'ouvre toutes les 5 minutes, avec des contenus d'exemple.</p>
+
+  <main class="page">
+    <header class="entete">
+      <h1 class="titre-page">Calendrier de l'Avent des skills</h1>
+      <p class="intro">Chaque jour de décembre, une case présente un skill d'agent IA qui a servi à construire ce calendrier.</p>
+    </header>
+
+    <!-- role=status : les annonces (attente, fin, erreur, case fermée) sont lues sans déplacer le focus. -->
+    <p class="message" id="message" role="status" hidden></p>
+
+    <ol class="grille" id="grille" aria-label="Les 24 cases du calendrier"></ol>
+  </main>
+
+  <dialog class="panneau" id="panneau" aria-labelledby="panneau-titre">
+    <div class="panneau-corps" id="panneau-corps"></div>
+  </dialog>
+
+  <noscript><p class="message">Ce calendrier a besoin de JavaScript pour afficher les cases.</p></noscript>
+</body>
+</html>

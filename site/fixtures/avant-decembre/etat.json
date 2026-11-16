@@ -1,0 +1,130 @@
+{
+  "mode": "normal",
+  "saison": 2026,
+  "aujourdhui": null,
+  "fini": false,
+  "cases": [
+    {
+      "jour": 1,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-01T06:00:00.000Z"
+    },
+    {
+      "jour": 2,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-02T06:00:00.000Z"
+    },
+    {
+      "jour": 3,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-03T06:00:00.000Z"
+    },
+    {
+      "jour": 4,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-04T06:00:00.000Z"
+    },
+    {
+      "jour": 5,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-05T06:00:00.000Z"
+    },
+    {
+      "jour": 6,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-06T06:00:00.000Z"
+    },
+    {
+      "jour": 7,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-07T06:00:00.000Z"
+    },
+    {
+      "jour": 8,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-08T06:00:00.000Z"
+    },
+    {
+      "jour": 9,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-09T06:00:00.000Z"
+    },
+    {
+      "jour": 10,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-10T06:00:00.000Z"
+    },
+    {
+      "jour": 11,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-11T06:00:00.000Z"
+    },
+    {
+      "jour": 12,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-12T06:00:00.000Z"
+    },
+    {
+      "jour": 13,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-13T06:00:00.000Z"
+    },
+    {
+      "jour": 14,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-14T06:00:00.000Z"
+    },
+    {
+      "jour": 15,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-15T06:00:00.000Z"
+    },
+    {
+      "jour": 16,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-16T06:00:00.000Z"
+    },
+    {
+      "jour": 17,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-17T06:00:00.000Z"
+    },
+    {
+      "jour": 18,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-18T06:00:00.000Z"
+    },
+    {
+      "jour": 19,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-19T06:00:00.000Z"
+    },
+    {
+      "jour": 20,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-20T06:00:00.000Z"
+    },
+    {
+      "jour": 21,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-21T06:00:00.000Z"
+    },
+    {
+      "jour": 22,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-22T06:00:00.000Z"
+    },
+    {
+      "jour": 23,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-23T06:00:00.000Z"
+    },
+    {
+      "jour": 24,
+      "etat": "fermee",
+      "ouvertureLe": "2026-12-24T06:00:00.000Z"
+    }
+  ],
+  "jetons": {},
+  "genereLe": "2026-01-01T00:00:00.000Z"
+}

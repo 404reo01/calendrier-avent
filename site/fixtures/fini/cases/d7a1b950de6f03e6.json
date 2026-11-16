@@ -1,0 +1,13 @@
+{
+  "jour": 24,
+  "titre": "[DÉMO] Fabriquer un skill",
+  "skill": {
+    "nom": "skill-demo-24",
+    "source": "Contenu de démonstration (inventé)",
+    "lien": "https://example.com/skill-demo"
+  },
+  "accroche": "[DÉMO] Contenu inventé pour tester l'affichage de la case 24.",
+  "exemple": "[DÉMO] Exemple fictif.\nOn demande à l'agent de faire « fabriquer un skill » et il répond en quelques lignes.",
+  "essayer": "[DÉMO] Dites simplement à votre agent ce que vous voulez obtenir. Ceci n'est pas un vrai mode d'emploi.",
+  "avis": "[DÉMO] Un avis fictif, présent une case sur trois."
+}
