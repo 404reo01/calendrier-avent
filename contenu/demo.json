@@ -1,0 +1,293 @@
+{
+  "cases": [
+    {
+      "jour": 1,
+      "titre": "[DÉMO] Le résumeur de réunions",
+      "skill": {
+        "nom": "demo-skill-1",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour résumer une réunion en cinq lignes, sans prise de tête (case de démonstration n° 1).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à résumer une réunion en cinq lignes » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 1).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à résumer une réunion en cinq lignes (suggestion de démonstration n° 1)."
+    },
+    {
+      "jour": 2,
+      "titre": "[DÉMO] Le correcteur de tournures",
+      "skill": {
+        "nom": "demo-skill-2",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour corriger un message sans le rendre froid, sans prise de tête (case de démonstration n° 2).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à corriger un message sans le rendre froid » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 2).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à corriger un message sans le rendre froid (suggestion de démonstration n° 2)."
+    },
+    {
+      "jour": 3,
+      "titre": "[DÉMO] Le planificateur de repas",
+      "skill": {
+        "nom": "demo-skill-3",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour préparer les repas de la semaine, sans prise de tête (case de démonstration n° 3).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à préparer les repas de la semaine » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 3).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à préparer les repas de la semaine (suggestion de démonstration n° 3)."
+    },
+    {
+      "jour": 4,
+      "titre": "[DÉMO] Le traducteur de jargon",
+      "skill": {
+        "nom": "demo-skill-4",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour expliquer un terme technique simplement, sans prise de tête (case de démonstration n° 4).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à expliquer un terme technique simplement » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 4).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à expliquer un terme technique simplement (suggestion de démonstration n° 4)."
+    },
+    {
+      "jour": 5,
+      "titre": "[DÉMO] Le trieur de courriels",
+      "skill": {
+        "nom": "demo-skill-5",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour classer sa boîte de réception, sans prise de tête (case de démonstration n° 5).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à classer sa boîte de réception » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 5).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à classer sa boîte de réception (suggestion de démonstration n° 5)."
+    },
+    {
+      "jour": 6,
+      "titre": "[DÉMO] Le coach de présentation",
+      "skill": {
+        "nom": "demo-skill-6",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour répéter un exposé de trois minutes, sans prise de tête (case de démonstration n° 6).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à répéter un exposé de trois minutes » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 6).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à répéter un exposé de trois minutes (suggestion de démonstration n° 6)."
+    },
+    {
+      "jour": 7,
+      "titre": "[DÉMO] Le chasseur de bogues",
+      "skill": {
+        "nom": "demo-skill-7",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour trouver pourquoi un programme plante, sans prise de tête (case de démonstration n° 7).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à trouver pourquoi un programme plante » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 7).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à trouver pourquoi un programme plante (suggestion de démonstration n° 7)."
+    },
+    {
+      "jour": 8,
+      "titre": "[DÉMO] Le rédacteur de comptes rendus",
+      "skill": {
+        "nom": "demo-skill-8",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour transformer des notes en compte rendu, sans prise de tête (case de démonstration n° 8).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à transformer des notes en compte rendu » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 8).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à transformer des notes en compte rendu (suggestion de démonstration n° 8)."
+    },
+    {
+      "jour": 9,
+      "titre": "[DÉMO] Le dénicheur de sources",
+      "skill": {
+        "nom": "demo-skill-9",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour retrouver d'où vient une information, sans prise de tête (case de démonstration n° 9).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à retrouver d'où vient une information » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 9).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à retrouver d'où vient une information (suggestion de démonstration n° 9)."
+    },
+    {
+      "jour": 10,
+      "titre": "[DÉMO] Le metteur en forme",
+      "skill": {
+        "nom": "demo-skill-10",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour mettre un tableau au propre, sans prise de tête (case de démonstration n° 10).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à mettre un tableau au propre » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 10).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à mettre un tableau au propre (suggestion de démonstration n° 10)."
+    },
+    {
+      "jour": 11,
+      "titre": "[DÉMO] Le conteur du soir",
+      "skill": {
+        "nom": "demo-skill-11",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour inventer une histoire pour les enfants, sans prise de tête (case de démonstration n° 11).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à inventer une histoire pour les enfants » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 11).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à inventer une histoire pour les enfants (suggestion de démonstration n° 11)."
+    },
+    {
+      "jour": 12,
+      "titre": "[DÉMO] Le comparateur de devis",
+      "skill": {
+        "nom": "demo-skill-12",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour comparer deux offres côte à côte, sans prise de tête (case de démonstration n° 12).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à comparer deux offres côte à côte » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 12).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à comparer deux offres côte à côte (suggestion de démonstration n° 12)."
+    },
+    {
+      "jour": 13,
+      "titre": "[DÉMO] Le relecteur de contrats",
+      "skill": {
+        "nom": "demo-skill-13",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour repérer les passages à relire, sans prise de tête (case de démonstration n° 13).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à repérer les passages à relire » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 13).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à repérer les passages à relire (suggestion de démonstration n° 13).",
+      "avis": "[DÉMO] Un avis de démonstration : pratique pour débuter, à adapter selon vos besoins."
+    },
+    {
+      "jour": 14,
+      "titre": "[DÉMO] Le professeur de langues",
+      "skill": {
+        "nom": "demo-skill-14",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour s'entraîner à parler une langue étrangère, sans prise de tête (case de démonstration n° 14).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à s'entraîner à parler une langue étrangère » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 14).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à s'entraîner à parler une langue étrangère (suggestion de démonstration n° 14)."
+    },
+    {
+      "jour": 15,
+      "titre": "[DÉMO] Le cartographe d'idées",
+      "skill": {
+        "nom": "demo-skill-15",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour organiser un brouillon d'idées, sans prise de tête (case de démonstration n° 15).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à organiser un brouillon d'idées » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 15).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à organiser un brouillon d'idées (suggestion de démonstration n° 15)."
+    },
+    {
+      "jour": 16,
+      "titre": "[DÉMO] Le chef de projet de poche",
+      "skill": {
+        "nom": "demo-skill-16",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour découper un projet en petites tâches, sans prise de tête (case de démonstration n° 16).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à découper un projet en petites tâches » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 16).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à découper un projet en petites tâches (suggestion de démonstration n° 16)."
+    },
+    {
+      "jour": 17,
+      "titre": "[DÉMO] Le chercheur de cadeaux",
+      "skill": {
+        "nom": "demo-skill-17",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour trouver une idée de cadeau, sans prise de tête (case de démonstration n° 17).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à trouver une idée de cadeau » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 17).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à trouver une idée de cadeau (suggestion de démonstration n° 17)."
+    },
+    {
+      "jour": 18,
+      "titre": "[DÉMO] Le nettoyeur de données",
+      "skill": {
+        "nom": "demo-skill-18",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour corriger les erreurs d'une liste, sans prise de tête (case de démonstration n° 18).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à corriger les erreurs d'une liste » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 18).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à corriger les erreurs d'une liste (suggestion de démonstration n° 18)."
+    },
+    {
+      "jour": 19,
+      "titre": "[DÉMO] Le tisseur de légendes",
+      "skill": {
+        "nom": "demo-skill-19",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour écrire une légende pour une photo, sans prise de tête (case de démonstration n° 19).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à écrire une légende pour une photo » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 19).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à écrire une légende pour une photo (suggestion de démonstration n° 19)."
+    },
+    {
+      "jour": 20,
+      "titre": "[DÉMO] Le gardien des secrets",
+      "skill": {
+        "nom": "demo-skill-20",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour vérifier qu'on ne partage rien de sensible, sans prise de tête (case de démonstration n° 20).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à vérifier qu'on ne partage rien de sensible » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 20).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à vérifier qu'on ne partage rien de sensible (suggestion de démonstration n° 20)."
+    },
+    {
+      "jour": 21,
+      "titre": "[DÉMO] Le metteur en scène",
+      "skill": {
+        "nom": "demo-skill-21",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour préparer le scénario d'une vidéo, sans prise de tête (case de démonstration n° 21).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à préparer le scénario d'une vidéo » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 21).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à préparer le scénario d'une vidéo (suggestion de démonstration n° 21)."
+    },
+    {
+      "jour": 22,
+      "titre": "[DÉMO] Le faiseur de quiz",
+      "skill": {
+        "nom": "demo-skill-22",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour créer un quiz pour la famille, sans prise de tête (case de démonstration n° 22).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à créer un quiz pour la famille » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 22).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à créer un quiz pour la famille (suggestion de démonstration n° 22)."
+    },
+    {
+      "jour": 23,
+      "titre": "[DÉMO] Le maître des listes",
+      "skill": {
+        "nom": "demo-skill-23",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour préparer une liste de courses ou de voyage, sans prise de tête (case de démonstration n° 23).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à préparer une liste de courses ou de voyage » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 23).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à préparer une liste de courses ou de voyage (suggestion de démonstration n° 23)."
+    },
+    {
+      "jour": 24,
+      "titre": "[DÉMO] Le dernier grimoire",
+      "skill": {
+        "nom": "demo-skill-24",
+        "source": "Démo findskills.org",
+        "lien": "https://findskills.org/"
+      },
+      "accroche": "[DÉMO] Un petit sort du grimoire pour relire tout ce qu'on a appris ce mois-ci, sans prise de tête (case de démonstration n° 24).",
+      "exemple": "[DÉMO] Vous dites « aide-moi à relire tout ce qu'on a appris ce mois-ci » et le skill propose une première version, que vous ajustez ensuite (exemple fictif n° 24).",
+      "essayer": "[DÉMO] Ouvrez votre assistant et demandez-lui de vous aider à relire tout ce qu'on a appris ce mois-ci (suggestion de démonstration n° 24)."
+    }
+  ]
+}

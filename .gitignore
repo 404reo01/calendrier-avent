@@ -9,5 +9,9 @@ dist/
 Thumbs.db
 *.log
 .claude/settings.local.json
-contenu/cases.json
 dist/
+*.tmp
+# contenu/ : liste blanche, tout le reste (texte clair, copies, sauvegardes) reste local
+contenu/*
+!contenu/cases.chiffrees.json
+!contenu/demo.json
