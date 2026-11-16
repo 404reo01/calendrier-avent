@@ -1,0 +1,189 @@
+# Le robot : construit le site avec les seules cases dues, vérifie qu'aucune case
+# future ne fuit, puis le publie sur GitHub Pages (par artefact : rien n'est commité).
+# Mode d'emploi pour humains : docs/robot.md.
+name: Publier le calendrier
+
+on:
+  schedule:
+    # GitHub accepte un fuseau IANA à côté du cron (doc « events that trigger
+    # workflows », § schedule, vérifiée le 2026-11-16). Avec Europe/Paris, 7 h 00
+    # reste 7 h 00 à Paris en hiver (= 06:00 UTC) comme en été (= 05:00 UTC).
+    # Si HEURE_OUVERTURE change, changer aussi ces deux lignes.
+    - cron: '0 7 * * *'
+      timezone: Europe/Paris
+    # Rattrapage : GitHub retarde souvent (5 à 30 min) ou saute un passage au début
+    # de chaque heure. Relancer est sans risque : le site ne dépend que de l'heure.
+    - cron: '30 7 * * *'
+      timezone: Europe/Paris
+    # Mode accéléré (démo) : toutes les 5 min, le minimum de GitHub. En mode
+    # normal, ce passage s'arrête au premier pas (job « aiguillage »).
+    - cron: '*/5 * * * *'
+  # Le bouton « Run workflow » de l'onglet Actions : même chemin que le planifié.
+  workflow_dispatch:
+
+# Sécurité : par défaut, le jeton du robot ne peut que LIRE le dépôt.
+# Seul le job deploy reçoit les droits d'écriture sur Pages (voir plus bas).
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  aiguillage:
+    name: Faut-il publier ?
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    # Aucun droit : ce job ne lit même pas le dépôt (pas de checkout).
+    permissions: {}
+    outputs:
+      publier: ${{ steps.decision.outputs.publier }}
+    steps:
+      - id: decision
+        name: Décider sans rien télécharger
+        # Les valeurs passent par env: et jamais par ${{ }} dans le script.
+        env:
+          EVENEMENT: ${{ github.event_name }}
+          PLANIF: ${{ github.event.schedule }}
+          MODE: ${{ vars.MODE }}
+          BRANCHE: ${{ github.ref }}
+        run: |
+          publier=true
+          raison="publication"
+          if [ "$BRANCHE" != "refs/heads/main" ]; then
+            # Le robot ne publie que depuis main (CONVENTIONS § 3).
+            publier=false
+            raison="branche autre que main : rien n'est publié"
+          elif [ "$EVENEMENT" = "schedule" ] && [ "$PLANIF" = "*/5 * * * *" ] && [ "$MODE" != "accelere" ]; then
+            publier=false
+            raison="passage « toutes les 5 min » ignoré : MODE n'est pas « accelere »"
+          fi
+          echo "publier=$publier" >> "$GITHUB_OUTPUT"
+          echo "Décision : $raison."
+          if [ "$publier" = "false" ]; then
+            echo "Rien à faire : $raison." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  construire:
+    name: Tester, construire, vérifier
+    needs: aiguillage
+    if: needs.aiguillage.outputs.publier == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Sécurité : le jeton n'est pas laissé dans .git/config pour les étapes suivantes.
+          persist-credentials: false
+
+      - name: Installer Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          # Pas de .nvmrc dans le dépôt : Node 22 (>= 20.18 demandé par package.json).
+          # Pas de cache : aucune dépendance à installer, et un cache peut être empoisonné.
+          node-version: '22'
+
+      - name: Lancer les tests
+        # Sans la clé : les tests fabriquent leurs propres clés de test.
+        run: npm test
+
+      - name: Construire dist/ (seulement les cases dues)
+        # La clé n'est exposée qu'à cette étape et à la suivante.
+        env:
+          CLE_CALENDRIER: ${{ secrets.CLE_CALENDRIER }}
+          MODE: ${{ vars.MODE }}
+          HEURE_OUVERTURE: ${{ vars.HEURE_OUVERTURE }}
+          DEPART_ACCELERE: ${{ vars.DEPART_ACCELERE }}
+        run: node scripts/construire.mjs
+
+      - name: Vérifier qu'aucune case future ne fuit
+        # Code de sortie 1 en cas de fuite : le job échoue et deploy ne part pas.
+        env:
+          CLE_CALENDRIER: ${{ secrets.CLE_CALENDRIER }}
+          MODE: ${{ vars.MODE }}
+          HEURE_OUVERTURE: ${{ vars.HEURE_OUVERTURE }}
+          DEPART_ACCELERE: ${{ vars.DEPART_ACCELERE }}
+        run: node scripts/verifier-fuite.mjs
+
+      - name: Emballer le site pour Pages
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: dist/
+
+      - name: Écrire le journal du passage
+        # Seulement des heures, le mode et des NUMÉROS de case : jamais un contenu.
+        env:
+          EVENEMENT: ${{ github.event_name }}
+          PLANIF: ${{ github.event.schedule }}
+        run: |
+          node --input-type=module <<'JS'
+          import { appendFileSync, readFileSync } from 'node:fs';
+          const etat = JSON.parse(readFileSync('dist/etat.json', 'utf8'));
+          const numeros = (liste) => liste.map((c) => c.jour).filter(Number.isInteger);
+          const ouvertes = numeros(etat.cases.filter((c) => c.etat !== 'fermee'));
+          const prochaine = etat.cases.find((c) => c.etat === 'fermee');
+          const maintenant = new Date();
+          const heureParis = (d) => new Intl.DateTimeFormat('fr-FR', {
+            timeZone: 'Europe/Paris', dateStyle: 'full', timeStyle: 'medium',
+          }).format(d);
+          const planifs = {
+            '0 7 * * *': 'planifié, 7 h 00 Paris',
+            '30 7 * * *': 'planifié, rattrapage de 7 h 30 Paris',
+            '*/5 * * * *': 'planifié, toutes les 5 min (mode accéléré)',
+          };
+          const declencheur = process.env.EVENEMENT === 'workflow_dispatch'
+            ? 'à la main (bouton Run workflow)'
+            : planifs[process.env.PLANIF] ?? process.env.EVENEMENT;
+          const lignes = [
+            '## Passage du robot',
+            '',
+            `- Heure UTC : ${maintenant.toISOString()}`,
+            `- Heure de Paris : ${heureParis(maintenant)}`,
+            `- Mode : ${etat.mode === 'accelere' ? 'accéléré (cases de démo)' : 'normal'}`,
+            `- Déclencheur : ${declencheur}`,
+            `- Cases ouvertes : ${ouvertes.length ? ouvertes.join(', ') : 'aucune'}`,
+            `- Case du jour : ${Number.isInteger(etat.aujourdhui) ? etat.aujourdhui : 'aucune'}`,
+            prochaine
+              ? `- Prochaine ouverture : case ${prochaine.jour}, ${heureParis(new Date(prochaine.ouvertureLe))}`
+              : `- Prochaine ouverture : aucune${etat.fini ? ' (calendrier terminé)' : ''}`,
+            '',
+          ];
+          console.log(lignes.join('\n'));
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lignes.join('\n')}\n`);
+          JS
+
+      - name: Signaler l'échec
+        if: failure()
+        run: |
+          {
+            echo "## Échec du passage"
+            echo ""
+            echo "Rien n'a été publié : le site garde son dernier état correct."
+            echo "Ouvrir l'étape en rouge ci-dessus pour lire la cause."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    name: Publier sur GitHub Pages
+    needs: construire
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Deux publications ne se marchent pas dessus : elles passent l'une après
+    # l'autre, sans annuler celle en cours. Placé ici (et pas sur tout le
+    # workflow) pour qu'un passage « 5 min » ignoré ne remplace jamais une
+    # vraie publication en attente.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    # Les seuls droits d'écriture du robot, et seulement pour ce job.
+    permissions:
+      pages: write # créer le déploiement Pages
+      id-token: write # prouver à Pages que le déploiement vient bien de ce dépôt (OIDC)
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - id: deploiement
+        name: Mettre en ligne
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
