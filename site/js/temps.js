@@ -22,7 +22,7 @@ function partie(parties, type) {
 function jourMois(date) {
   const parties = formatJourMois.formatToParts(date);
   const jour = partie(parties, "day");
-  return `${jour === "1" ? "1er" : jour} ${partie(parties, "month")}`;
+  return `${jour === "1" ? "1er" : jour}\u00a0${partie(parties, "month")}`;
 }
 
 // « 7 h » ou « 20 h 35 »
@@ -30,12 +30,13 @@ function heure(date) {
   const parties = formatHeure.formatToParts(date);
   const h = partie(parties, "hour");
   const m = partie(parties, "minute");
-  return m === "00" ? `${h} h` : `${h} h ${m}`;
+  // Espaces insécables : « 7 h » et « 14 déc. » ne se coupent jamais en fin de ligne.
+  return m === "00" ? `${h}\u00a0h` : `${h}\u00a0h\u00a0${m}`;
 }
 
 // → « Le 14 déc. à 7 h », ou null si la date est invalide.
 export function libelleOuverture(ouvertureLe) {
   const date = new Date(ouvertureLe);
   if (Number.isNaN(date.getTime())) return null;
-  return `Le ${jourMois(date)} à ${heure(date)}`;
+  return `Le ${jourMois(date)} à\u00a0${heure(date)}`;
 }

@@ -5,4 +5,4 @@ Chaque skill réellement utilisé pour construire le calendrier, avec ce qu'il a
 | Skill | Source | À quoi il a servi | Commit |
 |---|---|---|---|
 | points-de-sauvegarde | kit AI First | Premier point de sauvegarde, adresse noreply | f4dc835 |
-| frontend-design | anthropics/skills (Apache 2.0) | Direction artistique et moodboard 3D | à venir |
+| frontend-design | anthropics/skills (Apache 2.0) | Moodboard 3D, plan de tokens, scène du Grimoire et auto-critique sur captures | (ce commit) |

@@ -8,17 +8,26 @@ function estLienSur(lien) {
   return typeof lien === "string" && lien.startsWith("https://");
 }
 
-function bloc(titre, texte) {
-  return el("section", { classe: "panneau-bloc" }, [
+function bloc(titre, texte, classe = "") {
+  return el("section", { classe: `panneau-bloc ${classe}`.trim() }, [
     el("h3", { texte: titre }),
     el("p", { texte }),
+  ]);
+}
+
+// Le skill est présenté comme un sort : l'« Incantation » est la phrase à dire à son assistant IA.
+function blocIncantation(texte) {
+  return el("section", { classe: "panneau-bloc panneau-incantation" }, [
+    el("h3", { texte: "Incantation" }),
+    el("p", { classe: "panneau-aide", texte: "La phrase à dire à votre assistant IA pour l'essayer :" }),
+    el("p", { classe: "panneau-formule", texte }),
   ]);
 }
 
 function blocSkill(skill) {
   const lignes = [el("h3", { texte: "Le skill" })];
   lignes.push(el("p", { texte: `Nom : ${skill.nom ?? "—"}` }));
-  if (skill.source) lignes.push(el("p", { texte: `Source : ${skill.source}` }));
+  if (skill.source) lignes.push(el("p", { texte: `Provenance : ${skill.source}` }));
   if (estLienSur(skill.lien)) {
     lignes.push(el("p", {}, [
       el("a", {
@@ -33,13 +42,17 @@ function blocSkill(skill) {
 
 export function contenuDeLaCase(donnees, jour) {
   const enfants = [
-    el("p", { classe: "panneau-jour", texte: `Case ${jour}` }),
+    el("p", { classe: "panneau-jour", texte: `Grimoire n° ${jour}` }),
     el("h2", { classe: "panneau-titre", texte: donnees.titre, attributs: { id: "panneau-titre" } }),
   ];
-  if (donnees.accroche) enfants.push(el("p", { classe: "panneau-accroche", texte: donnees.accroche }));
+  // Lettrine seulement si le texte commence par une lettre (pas « [D » ni « « »).
+  if (donnees.accroche) {
+    const lettre = /^\p{L}/u.test(donnees.accroche);
+    enfants.push(el("p", { classe: lettre ? "panneau-accroche" : "panneau-accroche sans-lettrine", texte: donnees.accroche }));
+  }
   if (donnees.skill) enfants.push(blocSkill(donnees.skill));
   if (donnees.exemple) enfants.push(bloc("Un exemple", donnees.exemple));
-  if (donnees.essayer) enfants.push(bloc("Pour l'essayer", donnees.essayer));
+  if (donnees.essayer) enfants.push(blocIncantation(donnees.essayer));
   if (donnees.avis) enfants.push(bloc("Notre avis", donnees.avis));
   return enfants;
 }

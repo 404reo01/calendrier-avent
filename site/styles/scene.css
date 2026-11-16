@@ -1,0 +1,24 @@
+/* La vitrine de la scène 3D. Tant que three.js charge, on voit déjà une nuit d'hiver
+   (dégradé statique), pour que l'apparition du canvas ne fasse pas sauter la page. */
+.scene {
+  position: relative;
+  aspect-ratio: 2 / 1;
+  overflow: hidden;
+  border: 4px double var(--or-filet);
+  border-radius: 2px;
+  background:
+    radial-gradient(ellipse 30% 45% at 85% 70%, rgb(255 179 92 / 0.25), transparent 70%),
+    linear-gradient(#0c1222, #1d2438 70%, #21160e 70%);
+  box-shadow: 0 1rem 2.5rem rgb(6 10 20 / 0.45);
+}
+.scene.est-reduite { aspect-ratio: 4 / 3; }
+
+.scene-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 600ms ease-out;
+  touch-action: manipulation;
+}
+.scene.est-prete .scene-canvas { opacity: 1; }

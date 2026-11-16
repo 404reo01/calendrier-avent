@@ -1,31 +1,55 @@
-/* Tous les choix visuels vivent dans ces tokens : le thème final ne remplace que :root. */
+/* Thème « Le Grimoire des skills » : tous les choix visuels vivent dans ces tokens.
+   Clair = le jour (papier et encre). Sombre = la nuit (bougies et neige bleue).
+   Contrastes calculés (WCAG) : encre/papier 12,4:1 · parchemin/nuit 13,1:1 ·
+   texte discret 6,7:1 (clair) et 8,1:1 (sombre) · or sur cuir ≥ 7,1:1 · encre/page 13,2:1. */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
-  --couleur-fond: #f6f6f4;
-  --couleur-surface: #ffffff;
-  --couleur-texte: #1d1d1f;
-  --couleur-texte-discret: #55555c;
-  --couleur-bordure: #8a8a94;
-  --couleur-accent: #2a4fa8;
-  --couleur-accent-texte: #ffffff;
-  --couleur-fond-ouverte: #ffffff;
-  --couleur-fond-du-jour: #e4ecfb;
-  --couleur-fond-fermee: #ececea;
-  --couleur-demo-fond: #fff0c2;
-  --couleur-demo-texte: #4a3900;
-  --couleur-erreur: #a3201f;
-  --couleur-voile: rgb(0 0 0 / 0.5);
-  --couleur-focus: #1b3a8a;
+  /* Matières fixes, communes aux deux thèmes : un livre reste un livre, de jour comme de nuit. */
+  --cuir-bordeaux: #5b1f26;
+  --cuir-indigo: #23305a;
+  --cuir-brun: #4a2f1d;
+  --cuir-prune: #43233f;
+  --cuir-ardoise: #2f3a44;
+  --or-sur-cuir: #e6c87a;
+  --or-filet: #c9a046;
+  --cire: #8a2430;
+  --cire-claire: #b4434c;
+  --fer: #8d8f94;
+  --page-fond: #f1e6cc;
+  --page-encre: #2a1d12;
+  --page-rubrique: #7f2330;
+  --page-discret: #5a4632;
 
-  --police-texte: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --police-titre: var(--police-texte);
+  /* Jour */
+  --couleur-fond: #ebdfc5;
+  --couleur-fond-halo: #f3e9d2;
+  --couleur-surface: #f5ecd8;
+  --couleur-texte: #2a1d12;
+  --couleur-texte-discret: #5a4632;
+  --couleur-bordure: #8c7350;
+  --couleur-accent: #8a2430;
+  --couleur-accent-texte: #f5ecd8;
+  --couleur-dorure: #7d5a14;
+  --couleur-bois: #5a3a22;
+  --couleur-bois-arete: #7a5233;
+  --couleur-demo-fond: #2a1d12;
+  --couleur-demo-texte: #f1e6cc;
+  --couleur-erreur: #8a2430;
+  --couleur-voile: rgb(18 26 46 / 0.72);
+  --couleur-focus: #23305a;
+  --couleur-scene-cadre: #2a1d12;
 
+  --police-texte: "Alegreya", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --police-titre: "Cinzel", "Trajan Pro", "Times New Roman", serif;
+
+  /* Échelle typographique (quarte, 4:3) */
   --taille-petite: 0.8125rem;
-  --taille-base: 1rem;
-  --taille-moyenne: 1.125rem;
-  --taille-titre: clamp(1.5rem, 5vw, 2.25rem);
-  --interligne: 1.55;
+  --taille-base: 1.0625rem;
+  --taille-moyenne: 1.25rem;
+  --taille-grande: 1.6875rem;
+  --taille-titre: clamp(1.75rem, 6vw, 2.75rem);
+  --interligne: 1.6;
 
   --espace-1: 0.25rem;
   --espace-2: 0.5rem;
@@ -34,29 +58,33 @@
   --espace-5: 1.5rem;
   --espace-6: 2.5rem;
 
-  --rayon: 0.5rem;
+  --rayon: 0.25rem;
   --epaisseur-bordure: 1px;
   --epaisseur-focus: 3px;
-  --largeur-page: 52rem;
+  --largeur-page: 66rem;
   --duree: 180ms;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --couleur-fond: #16161a;
-    --couleur-surface: #1f1f25;
-    --couleur-texte: #f1f1f3;
-    --couleur-texte-discret: #b4b4bd;
-    --couleur-bordure: #7a7a86;
-    --couleur-accent: #8fb0ff;
-    --couleur-accent-texte: #0c1530;
-    --couleur-fond-ouverte: #1f1f25;
-    --couleur-fond-du-jour: #223056;
-    --couleur-fond-fermee: #26262c;
-    --couleur-demo-fond: #4a3900;
-    --couleur-demo-texte: #ffe9a8;
-    --couleur-erreur: #ff9c97;
-    --couleur-focus: #b9ceff;
+    color-scheme: dark;
+    --couleur-fond: #121a2e;
+    --couleur-fond-halo: #1c2742;
+    --couleur-surface: #1a2440;
+    --couleur-texte: #ecdfc4;
+    --couleur-texte-discret: #b9b0a0;
+    --couleur-bordure: #5d6a8a;
+    --couleur-accent: #d8b25a;
+    --couleur-accent-texte: #121a2e;
+    --couleur-dorure: #d8b25a;
+    --couleur-bois: #2c1c12;
+    --couleur-bois-arete: #4a3020;
+    --couleur-demo-fond: #d8b25a;
+    --couleur-demo-texte: #121a2e;
+    --couleur-erreur: #f0a7a0;
+    --couleur-voile: rgb(6 10 20 / 0.78);
+    --couleur-focus: #ffd98a;
+    --couleur-scene-cadre: #0b1020;
   }
 }
 
@@ -64,7 +92,8 @@
 
 body {
   margin: 0;
-  background: var(--couleur-fond);
+  /* Un halo statique (pas de calque fixe ni de mode de fusion) : la lueur d'une bougie au centre. */
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, var(--couleur-fond-halo), transparent 70%), var(--couleur-fond);
   color: var(--couleur-texte);
   font-family: var(--police-texte);
   font-size: var(--taille-base);
@@ -79,14 +108,30 @@ body {
   padding: var(--espace-5) var(--espace-4) var(--espace-6);
 }
 
-.entete { display: grid; gap: var(--espace-2); }
+.entete { display: grid; gap: var(--espace-2); justify-items: center; text-align: center; }
 .titre-page {
   margin: 0;
   font-family: var(--police-titre);
   font-size: var(--taille-titre);
-  line-height: 1.2;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
 }
-.intro { margin: 0; max-width: 60ch; color: var(--couleur-texte-discret); }
+/* Le filet doré double sous le titre, ponctué du flocon : la seule « dorure » de l'en-tête. */
+.titre-page::after {
+  content: "❅" / "";
+  display: block;
+  margin-top: var(--espace-2);
+  color: var(--couleur-dorure);
+  font-size: var(--taille-moyenne);
+  line-height: 1;
+  background: linear-gradient(var(--couleur-dorure), var(--couleur-dorure)) left 50% / calc(50% - 1.25rem) 1px no-repeat,
+              linear-gradient(var(--couleur-dorure), var(--couleur-dorure)) left calc(50% + 4px) / calc(50% - 1.25rem) 1px no-repeat,
+              linear-gradient(var(--couleur-dorure), var(--couleur-dorure)) right 50% / calc(50% - 1.25rem) 1px no-repeat,
+              linear-gradient(var(--couleur-dorure), var(--couleur-dorure)) right calc(50% + 4px) / calc(50% - 1.25rem) 1px no-repeat;
+}
+.intro { margin: 0; max-width: 56ch; color: var(--couleur-texte-discret); font-style: italic; }
 
 .bandeau-demo {
   margin: 0;
@@ -101,6 +146,7 @@ body {
   margin: 0;
   padding: var(--espace-3) var(--espace-4);
   border: var(--epaisseur-bordure) solid var(--couleur-bordure);
+  border-left: 4px double var(--couleur-dorure);
   border-radius: var(--rayon);
   background: var(--couleur-surface);
 }
@@ -108,7 +154,7 @@ body {
 
 :focus-visible {
   outline: var(--epaisseur-focus) solid var(--couleur-focus);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {

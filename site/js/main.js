@@ -2,6 +2,7 @@ import { chargerEtat, chargerCase, jetonDuJour } from "./donnees.js";
 import { afficherGrille } from "./grille.js";
 import { creerPanneau } from "./panneau.js";
 import { libelleOuverture } from "./temps.js";
+import { chargerScene } from "./scene/charger.js";
 
 const conteneurGrille = document.getElementById("grille");
 const zoneMessage = document.getElementById("message");
@@ -32,8 +33,24 @@ function messageGlobal(etat) {
   return null;
 }
 
+// Le moment 3D peut demander à passer avant la page : il appelle detail.retarder(promesse).
+// L'attente est plafonnée, pour qu'une scène bloquée ne puisse jamais empêcher la lecture.
+const ATTENTE_MAX_SCENE_MS = 4000;
+
+function annoncerOuverture(jour) {
+  const attentes = [];
+  const evenement = new CustomEvent("case:ouverte", {
+    detail: { jour, retarder: (promesse) => attentes.push(promesse) },
+  });
+  document.dispatchEvent(evenement);
+  if (attentes.length === 0) return Promise.resolve();
+  const plafond = new Promise((resoudre) => setTimeout(resoudre, ATTENTE_MAX_SCENE_MS));
+  return Promise.race([Promise.allSettled(attentes), plafond]);
+}
+
 function demarrerOuverture(panneau) {
   let etatCourant = null;
+  let ouvertureEnCours = false;
 
   async function ouvrirCase(caseEtat, bouton, libelle) {
     if (caseEtat.etat === "fermee") {
@@ -48,13 +65,18 @@ function demarrerOuverture(panneau) {
         : `Le contenu de la case ${caseEtat.jour} n'est pas disponible pour le moment.`, { erreur: true });
       return;
     }
+    // Un second clic pendant le moment 3D ne relance pas une ouverture.
+    if (ouvertureEnCours) return;
+    ouvertureEnCours = true;
     try {
       const donnees = await chargerCase(jeton);
       effacerMessage();
+      await annoncerOuverture(caseEtat.jour);
       panneau.ouvrir(donnees, caseEtat.jour, bouton);
-      document.dispatchEvent(new CustomEvent("case:ouverte", { detail: { jour: caseEtat.jour } }));
     } catch {
       annoncer(`Impossible de charger la case ${caseEtat.jour}. Réessayez dans un instant.`, { erreur: true });
+    } finally {
+      ouvertureEnCours = false;
     }
   }
 
@@ -74,6 +96,8 @@ async function demarrer() {
     afficherGrille(conteneurGrille, etat, { construction, surClic: ouverture.ouvrirCase });
     const global = messageGlobal(etat);
     if (global) annoncer(global);
+    // La 3D se branche sur la grille déjà affichée ; si elle ne peut pas se charger, la grille suffit.
+    chargerScene({ conteneur: document.getElementById("scene"), grille: conteneurGrille });
   } catch {
     annoncer("Le calendrier n'a pas pu être chargé. Rechargez la page dans un instant.", { erreur: true });
   }

@@ -72,7 +72,7 @@ Les règles du skill `points-de-sauvegarde` s'appliquent, plus :
 
 | Fichier | Version | SHA-256 |
 |---|---|---|
-| `site/vendor/three.module.min.js` | à fixer | à remplir |
+| `site/vendor/three.module.min.js` | three@0.160.0 (`build/three.module.min.js`, jsDelivr) | `3e690ac7d180b0aadf0891bea39eec643e29e2d3e75c99b18689518665f69ba6` |
 
 ## 6. Avant de dire « fini »
 

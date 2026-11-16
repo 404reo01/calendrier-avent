@@ -84,7 +84,13 @@ function demarrer() {
     if (req.method !== "GET" && req.method !== "HEAD") {
       return repondre(res, 405, "text/plain; charset=utf-8", "Méthode non permise");
     }
-    const { pathname } = new URL(req.url, `http://${HOTE}`);
+    let pathname;
+    try {
+      // Une adresse mal formée (ex. « // ») ne doit jamais faire tomber le serveur.
+      ({ pathname } = new URL(req.url, `http://${HOTE}`));
+    } catch {
+      return repondre(res, 400, "text/plain; charset=utf-8", "400 : adresse invalide");
+    }
     const fichier = fichierPour(racines, pathname, !scenario);
     if (!fichier) return repondre(res, 404, "text/plain; charset=utf-8", "404 : introuvable");
     try {

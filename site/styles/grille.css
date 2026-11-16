@@ -1,51 +1,143 @@
-/* Mobile d'abord : à 360 px, 3 colonnes de ~100 px, texte lisible sans zoom. */
+/* Le rayonnage : 24 dos de livres posés sur des planches.
+   Mobile d'abord : 4 livres par planche à 360 px, 12 par planche sur grand écran.
+   Un état se lit sans la couleur : le mot écrit, plus la forme du sceau
+   (intact + chaîne = fermée ; intact + étoile + livre qui dépasse = aujourd'hui ; fendu = ouverte). */
 .grille {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
-  gap: var(--espace-3);
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 0;
+  row-gap: var(--espace-5);
   margin: 0;
   padding: 0;
   list-style: none;
 }
+@media (min-width: 30rem) { .grille { grid-template-columns: repeat(6, 1fr); } }
+@media (min-width: 46rem) { .grille { grid-template-columns: repeat(8, 1fr); } }
+@media (min-width: 62rem) { .grille { grid-template-columns: repeat(12, 1fr); } }
+
+/* Chaque emplacement porte son morceau de planche : bout à bout, ils forment l'étagère. */
+.grille > li {
+  display: flex;
+  align-items: flex-end;
+  min-height: 11.5rem;
+  padding: var(--espace-3) 3px 0;
+  border-bottom: 0.625rem solid var(--couleur-bois);
+  box-shadow: 0 1px 0 var(--couleur-bois-arete);
+}
 
 .case {
+  --cuir: var(--cuir-bordeaux);
+  --hauteur: 100%;
+  position: relative;
   display: grid;
-  align-content: start;
-  gap: var(--espace-1);
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  align-items: center;
+  gap: var(--espace-2);
   width: 100%;
-  height: 100%;
-  min-height: 5.5rem;
-  padding: var(--espace-3);
-  border: var(--epaisseur-bordure) solid var(--couleur-bordure);
-  border-radius: var(--rayon);
-  background: var(--couleur-fond-ouverte);
-  color: var(--couleur-texte);
+  height: var(--hauteur);
+  min-height: 10rem;
+  padding: var(--espace-4) var(--espace-1) var(--espace-3);
+  overflow: hidden;
+  /* Contexte d'empilement propre : la chaîne (z-index -1) passe sous le sceau mais sur le cuir. */
+  isolation: isolate;
+  border: 0;
+  border-radius: 3px 3px 1px 1px;
+  /* Deux nerfs dorés en haut et en bas du dos, sur un cuir légèrement bombé. */
+  background:
+    linear-gradient(var(--or-filet), var(--or-filet)) 0 0.45rem / 100% 2px no-repeat,
+    linear-gradient(var(--or-filet), var(--or-filet)) 0 0.7rem / 100% 1px no-repeat,
+    linear-gradient(var(--or-filet), var(--or-filet)) 0 calc(100% - 0.45rem) / 100% 2px no-repeat,
+    linear-gradient(var(--or-filet), var(--or-filet)) 0 calc(100% - 0.7rem) / 100% 1px no-repeat,
+    linear-gradient(90deg, rgb(0 0 0 / 0.35), transparent 22%, rgb(255 255 255 / 0.07) 50%, transparent 78%, rgb(0 0 0 / 0.35)),
+    var(--cuir);
+  color: var(--or-sur-cuir);
   font: inherit;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
-  transition: background var(--duree), border-color var(--duree);
+  transition: transform var(--duree) ease-out;
 }
-.case:hover { border-color: var(--couleur-accent); }
 
-.case-numero { font-size: var(--taille-titre); font-weight: 700; line-height: 1; }
-.case-etat { font-size: var(--taille-petite); line-height: 1.3; }
-.case-signe { margin-right: var(--espace-1); }
+/* Cuirs et hauteurs variés, comme un vrai rayonnage (purement décoratif). */
+.grille > li:nth-child(5n + 2) .case { --cuir: var(--cuir-indigo); --hauteur: 94%; }
+.grille > li:nth-child(5n + 3) .case { --cuir: var(--cuir-brun); --hauteur: 97%; }
+.grille > li:nth-child(5n + 4) .case { --cuir: var(--cuir-prune); --hauteur: 91%; }
+.grille > li:nth-child(5n + 5) .case { --cuir: var(--cuir-ardoise); --hauteur: 96%; }
 
-/* Un état se lit par le mot et le pictogramme ; la couleur et la bordure ne font que renforcer. */
+/* L'étiquette du dos : numéro gravé dans un cartouche à double filet. */
+.case-numero {
+  min-width: 2.6rem;
+  padding: 0.1rem var(--espace-1);
+  border: 3px double var(--or-filet);
+  font-family: var(--police-titre);
+  font-size: var(--taille-grande);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Le sceau de cire, dessiné en CSS ; le pictogramme texte reste en secours si la feuille ne charge pas. */
+.case-signe {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--cire-claire), var(--cire) 60%);
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 0.25);
+  color: transparent;
+  font-size: 0;
+}
+
+.case-etat {
+  max-width: 100%;
+  font-size: var(--taille-petite);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+/* Fermée : une chaîne de fer barre le dos, le sceau est intact. */
+.case[data-etat="fermee"] { cursor: not-allowed; }
+.case[data-etat="fermee"] .case-signe::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: calc(50% - 0.35rem);
+  left: -4rem;
+  right: -4rem;
+  height: 0.7rem;
+  background: radial-gradient(ellipse 0.3rem 0.24rem at 50% 50%, transparent 52%, var(--fer) 56% 80%, transparent 84%) 0 0 / 0.55rem 0.7rem repeat-x;
+}
+
+/* Ouverte : le sceau est fendu en deux. */
+.case[data-etat="ouverte"] .case-signe {
+  background:
+    linear-gradient(105deg, transparent 44%, var(--cuir) 44% 56%, transparent 56%),
+    radial-gradient(circle at 35% 30%, var(--cire-claire), var(--cire) 60%);
+  transform: rotate(-12deg);
+}
+
+/* Aujourd'hui : le livre dépasse du rayon et luit ; une étoile d'or orne le sceau. */
 .case[data-etat="du-jour"] {
-  background: var(--couleur-fond-du-jour);
-  border: calc(var(--epaisseur-bordure) * 3) solid var(--couleur-accent);
+  transform: translateY(calc(-1 * var(--espace-3)));
+  box-shadow: 0 0 0 2px var(--or-filet), 0 0 1.25rem 0.25rem rgb(232 176 74 / 0.45);
 }
-.case[data-etat="fermee"] {
-  background: var(--couleur-fond-fermee);
-  border-style: dashed;
-  color: var(--couleur-texte-discret);
-  cursor: not-allowed;
+.case[data-etat="du-jour"] .case-signe {
+  color: var(--or-sur-cuir);
+  font-size: 1.1rem;
+  line-height: 1;
 }
-.case[data-etat="fermee"]:hover { border-color: var(--couleur-bordure); }
+.case[data-etat="du-jour"] .case-etat { font-weight: 700; }
+
+/* Le survol ne s'active qu'avec une vraie souris : rien au toucher. */
+@media (hover: hover) {
+  .case[data-etat="ouverte"]:hover { transform: translateY(calc(-1 * var(--espace-2))); }
+}
 
 .case-construction {
+  padding: 0 var(--espace-1);
+  background: var(--page-fond);
+  color: var(--cire);
   font-size: var(--taille-petite);
   font-weight: 700;
-  color: var(--couleur-erreur);
 }
