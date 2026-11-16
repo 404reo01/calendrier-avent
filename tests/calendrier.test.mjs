@@ -91,6 +91,16 @@ test("la saison est l'année en cours en décembre", () => {
   assert.equal(saisonDe(paris('2026-12-12T12:00:00+01:00')), 2026);
 });
 
+test("de mars à novembre, la saison est l'année en cours (le décembre à venir)", () => {
+  assert.equal(saisonDe(paris('2026-03-01T12:00:00+01:00')), 2026);
+  assert.equal(saisonDe(paris('2026-11-16T12:00:00+01:00')), 2026);
+});
+
+test("en accéléré, la saison vaut saisonDe(maintenant)", () => {
+  const maintenant = new Date(new Date(DEPART).getTime() + 12 * MIN);
+  assert.equal(etatsDesCases(maintenant, ACCELERE).saison, saisonDe(maintenant));
+});
+
 test("en janvier, la saison est l'année précédente", () => {
   assert.equal(saisonDe(paris('2027-01-15T12:00:00+01:00')), 2026);
 });
@@ -136,7 +146,7 @@ test("la case 24 est « du-jour » le 24 décembre jusqu'à la fin de la journé
   assert.equal(etat.fini, false);
 });
 
-test("une case reste « du-jour » tant que 24 h ne se sont pas écoulées depuis son ouverture (23 h 59 après la 12, c'est encore la 12)", () => {
+test("23 h 59 après l'ouverture de la case 12, la 12 est encore la case du jour (la 13 n'est pas ouverte)", () => {
   const etat = etatsDesCases(new Date(ouvertureNormale(12).getTime() + 24 * HEURE - 1), NORMAL);
   assert.equal(etat.aujourdhui, 12);
 });

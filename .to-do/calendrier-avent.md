@@ -61,7 +61,7 @@ Secret : `CLE_CALENDRIER` = 32 octets en base64. C'est le seul secret du projet.
 **Contrat C2 — Moteur** `etatsDesCases(maintenant: Date, reglages) → { mode, aujourdhui: n|null, cases: [{ jour: 1..24, etat: "ouverte"|"du-jour"|"fermee", ouvertureLe: ISO }] , fini: bool }`
 - Normal : la case *j* est due quand `maintenant ≥ j décembre à HEURE_OUVERTURE, heure de Paris`. Les années se calculent à partir de `maintenant`.
 - Accéléré : la case *j* est due quand `maintenant ≥ DEPART_ACCELERE + (j-1) × 5 min`. **Source = `contenu/demo.json`** (cases de démo), jamais les vraies cases (T4). `etat.json` porte `mode: "accelere"` et le site affiche un bandeau « Mode démo ».
-- « du-jour » = la plus haute case due, si elle a été ouverte dans les dernières 24 h (normal) ou les dernières 5 min (accéléré) ; sinon aucune. Au plus une.
+- « du-jour » = la plus haute case due, sauf quand `fini` (arbitrage 1 de contrats.md). Au plus une.
 - Fonction pure et déterministe : même entrée, même sortie. Relancer deux fois ne change rien, et un passage sauté est rattrapé au suivant.
 
 **Contrat C3 — Ce que reçoit le visiteur** (`dist/`) :

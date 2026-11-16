@@ -333,6 +333,59 @@ test("verifierFuite ignore un avis de moins de 12 caractères (trop court pour �
   assert.deepEqual(await verifierFuite({ sortie, casesInterdites: [interdite] }), []);
 });
 
+test('verifierFuite donne le fichier en chemin relatif à la sortie, avec des « / »', async () => {
+  const sortie = sortieNeuve();
+  await construireDans(sortie, DOUZE_DEC, NORMAL);
+  await mkdir(join(sortie, 'sous', 'dossier'), { recursive: true });
+  await writeFile(join(sortie, 'sous', 'dossier', 'note.txt'), vraiesCases[12].titre);
+  const fuites = await verifierFuite({ sortie, casesInterdites: [vraiesCases[12]] });
+  assert.deepEqual(fuites, [{ fichier: 'sous/dossier/note.txt', jour: 13 }]);
+});
+
+test("verifierFuite ne compte qu'une fuite par couple (fichier, jour), même si plusieurs textes de la case sont présents", async () => {
+  const sortie = sortieNeuve();
+  await construireDans(sortie, DOUZE_DEC, NORMAL);
+  const c = vraiesCases[12];
+  await writeFile(join(sortie, 'tout.txt'), [c.titre, c.accroche, c.exemple, c.essayer, c.avis].join(' | '));
+  const fuites = await verifierFuite({ sortie, casesInterdites: [c] });
+  assert.equal(fuites.length, 1);
+  assert.equal(fuites[0].jour, 13);
+});
+
+test('verifierFuite avec la clé signale la présence de cases/<jeton de la case 13>.json', async () => {
+  const sortie = sortieNeuve();
+  await construireDans(sortie, DOUZE_DEC, NORMAL);
+  await writeFile(join(sortie, 'cases', `${jetonCase(13, cle)}.json`), '{}');
+  const fuites = await verifierFuite({ sortie, casesInterdites: [vraiesCases[12]], cle });
+  assert.equal(fuites.length, 1);
+  assert.equal(fuites[0].jour, 13);
+  assert.equal(fuites[0].fichier, `cases/${jetonCase(13, cle)}.json`);
+});
+
+test("verifierFuite avec la clé ne signale pas le jeton d'une case autorisée", async () => {
+  const sortie = sortieNeuve();
+  await construireDans(sortie, DOUZE_DEC, NORMAL);
+  assert.deepEqual(await verifierFuite({ sortie, casesInterdites: vraiesCases.filter((c) => c.jour >= 13), cle }), []);
+});
+
+test('construire renvoie un etat égal, une fois relu en JSON, au contenu de etat.json', async () => {
+  const sortie = sortieNeuve();
+  const resultat = await construireDans(sortie, DOUZE_DEC, NORMAL);
+  const ecrit = JSON.parse(await readFile(join(sortie, 'etat.json'), 'utf8'));
+  assert.deepEqual(JSON.parse(JSON.stringify(resultat.etat)), ecrit);
+  assert.deepEqual(resultat.etat.jetons, resultat.jetons);
+  assert.equal(resultat.etat.genereLe, DOUZE_DEC.toISOString());
+});
+
+test('la CLI refuse --maintenant dès que CI est défini, même vide (code de sortie 1)', () => {
+  const resultat = spawnSync(
+    process.execPath,
+    ['scripts/construire.mjs', '--maintenant', '2026-12-12T12:00:00+01:00'],
+    { cwd: RACINE, encoding: 'utf8', env: { ...process.env, CI: '', CLE_CALENDRIER: cle.toString('base64') } },
+  );
+  assert.equal(resultat.status, 1);
+});
+
 test('verifierFuite ne signale pas les cases déjà publiées (autorisées)', async () => {
   const sortie = sortieNeuve();
   await construireDans(sortie, DOUZE_DEC, NORMAL);

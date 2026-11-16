@@ -120,6 +120,10 @@ test('une clé absente provoque une erreur claire : « CLE_CALENDRIER manquante 
   assert.throws(() => lireCle({}), (e) => e instanceof Error && /CLE_CALENDRIER manquante/.test(e.message));
 });
 
+test('une clé vide (chaîne vide) est traitée comme manquante', () => {
+  assert.throws(() => lireCle({ CLE_CALENDRIER: '' }), (e) => e instanceof Error && /CLE_CALENDRIER manquante/.test(e.message));
+});
+
 test('une clé de 16 octets provoque une erreur « CLE_CALENDRIER invalide »', () => {
   const courte = randomBytes(16).toString('base64');
   assert.throws(() => lireCle({ CLE_CALENDRIER: courte }), (e) => e instanceof Error && /CLE_CALENDRIER invalide/.test(e.message));
