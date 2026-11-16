@@ -6,10 +6,11 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
   <title>Calendrier de l'Avent des skills</title>
   <meta name="description" content="24 skills d'agent IA, un par jour du 1er au 24 décembre : ceux qui ont servi à construire ce calendrier.">
-  <!-- Duo typographique : Cinzel (capitales gravées : titres, numéros, lettrines) et Alegreya (texte). -->
+  <!-- Duo typographique : Grenze Gotisch (gothique hybride, lisible : titres, numéros, lettrines)
+       et Vollkorn (sérif de lecture à l'encre dense : texte). -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,600;0,700;1,400&amp;family=Cinzel:wght@500;700&amp;display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@500;700&amp;family=Vollkorn:ital,wght@0,400;0,600;1,400&amp;display=swap">
   <link rel="stylesheet" href="styles/base.css">
   <link rel="stylesheet" href="styles/grille.css">
   <link rel="stylesheet" href="styles/panneau.css">
@@ -22,17 +23,27 @@
   <main class="page">
     <header class="entete">
       <h1 class="titre-page">Calendrier de l'Avent des skills</h1>
-      <p class="intro">Chaque jour de décembre, une case présente un skill d'agent IA qui a servi à construire ce calendrier.</p>
+      <p class="intro">Chaque matin de décembre, une étoile s'allume au-dessus de la nef. Elle présente un skill d'agent IA qui a servi à construire ce calendrier.</p>
     </header>
 
     <!-- Scène 3D décorative (aria-hidden) : la grille ci-dessous reste la vérité, au clavier et au lecteur d'écran.
-         Elle n'apparaît que si WebGL est disponible et que le mouvement n'est pas réduit. -->
+         Elle n'apparaît que si WebGL est disponible ; avec le mouvement réduit, elle reste figée. -->
     <div class="scene" id="scene" aria-hidden="true" hidden></div>
 
     <!-- role=status : les annonces (attente, fin, erreur, case fermée) sont lues sans déplacer le focus. -->
     <p class="message" id="message" role="status" hidden></p>
 
-    <ol class="grille" id="grille" aria-label="Les 24 cases du calendrier"></ol>
+    <section class="carte" aria-labelledby="carte-titre">
+      <div class="carte-entete">
+        <h2 class="carte-titre" id="carte-titre">La carte du ciel</h2>
+        <ul class="legende">
+          <li><span class="legende-signe" data-etat="fermee" aria-hidden="true"></span>Pas encore ouverte</li>
+          <li><span class="legende-signe" data-etat="du-jour" aria-hidden="true"></span>Aujourd'hui</li>
+          <li><span class="legende-signe" data-etat="ouverte" aria-hidden="true"></span>Ouverte</li>
+        </ul>
+      </div>
+      <ol class="grille" id="grille" aria-label="Les 24 cases du calendrier"></ol>
+    </section>
   </main>
 
   <dialog class="panneau" id="panneau" aria-labelledby="panneau-titre">

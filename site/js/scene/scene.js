@@ -1,14 +1,34 @@
-// La bibliothèque d'hiver en three.js. Un seul canvas, rendu à la demande, branché sur la grille DOM :
-// l'état des livres vient des data-etat des boutons, et toute ouverture passe par le bouton DOM.
+// La Nef étoilée en three.js. Un seul canvas, rendu à la demande, branché sur la grille DOM :
+// l'état des étoiles vient des data-etat des boutons, et toute ouverture passe par le bouton DOM.
 import * as THREE from "../../vendor/three.module.min.js";
 import { creerBoucle } from "./boucle.js";
-import { creerBougies, creerFenetre, creerPieceEtLumieres, creerRayonnage } from "./decor.js";
-import { creerLivres, creerMateriauxCommuns } from "./livres.js";
+import { creerCiel } from "./ciel.js";
+import { creerFlamme, creerLivre, creerLueur } from "./livre.js";
 import { creerMoment } from "./moment.js";
+import { creerMateriaux, creerNef } from "./nef.js";
+import { creerRendu } from "./rendu.js";
 import { attendrePolices } from "./textures.js";
 
 // En dessous de ce débit, l'appareil est jugé faible : la scène devient une image fixe.
 const DEBIT_MINIMUM = 24;
+// Rayon de clic autour d'une étoile, en pixels CSS : une cible tactile confortable.
+const RAYON_CLIC = 24;
+
+// Deux cadrages : large (le ciel au-dessus de la nef) et vertical sur téléphone (le ciel en haut, le pupitre en bas).
+const CADRAGES = {
+  large: {
+    fov: 50,
+    base: { position: new THREE.Vector3(0, 2.0, 14), regard: new THREE.Vector3(0, 10.5, -20) },
+    pres: { position: new THREE.Vector3(0, 3.3, -2.2), regard: new THREE.Vector3(0, 3.6, -11) },
+    constellation: { cx: 0.05, cy: 0.5, ex: 0.6, ey: 0.34 },
+  },
+  vertical: {
+    fov: 66,
+    base: { position: new THREE.Vector3(0, 1.9, 6.5), regard: new THREE.Vector3(0, 10, -20) },
+    pres: { position: new THREE.Vector3(0, 3.2, -3.2), regard: new THREE.Vector3(0, 4.2, -11) },
+    constellation: { cx: 0, cy: 0.52, ex: 0.78, ey: 0.32 },
+  },
+};
 
 function lireCases(grille) {
   return [...grille.querySelectorAll("button.case[data-jour]")]
@@ -16,93 +36,78 @@ function lireCases(grille) {
     .filter((c) => Number.isInteger(c.jour) && c.jour >= 1 && c.jour <= 24);
 }
 
-// Sur téléphone, un seul livre : celui du jour, sinon le dernier ouvert, sinon le premier.
-function jourAffiche(cases) {
+// Le livre du pupitre ouvre la case du jour, sinon la dernière ouverte.
+function jourDuLivre(cases) {
   const duJour = cases.find((c) => c.etat === "du-jour");
   if (duJour) return duJour.jour;
   const ouvertes = cases.filter((c) => c.etat === "ouverte");
-  return ouvertes.length ? ouvertes.at(-1).jour : 1;
+  return ouvertes.length ? ouvertes.at(-1).jour : null;
 }
 
-function amenager(scene, cases, reduit, communs) {
-  creerPieceEtLumieres(scene, { reduit });
-  if (reduit) {
-    const jour = jourAffiche(cases);
-    const tablette = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.08, 1.1), new THREE.MeshLambertMaterial({ color: "#5a3a22" }));
-    tablette.position.set(0, 0.6, 0);
-    const fenetre = creerFenetre({ x: 0, y: 1.6, largeur: 1.5, hauteur: 1.9, nombreFlocons: 140 });
-    const bougies = creerBougies([[0.62, 0.64, 0.2, 0.3], [0.78, 0.64, 0.05, 0.2]]);
-    const rayon = creerLivres(cases, [{ y: 0.64, jours: [jour] }], communs);
-    scene.add(tablette, fenetre.groupe, bougies.groupe, rayon.groupe);
-    return {
-      rayon, ambiances: [fenetre.neige.maj, (dt, t) => bougies.maj(t)],
-      camera: { fov: 34, position: [0, 1.3, 3.9], regard: [0, 1.25, 0] },
-      cible: { position: new THREE.Vector3(0.425, 1.25, 1.05), inclinaison: -0.12 },
-    };
+function libererTout(...racines) {
+  for (const racine of racines) {
+    racine.traverse((objet) => {
+      objet.geometry?.dispose();
+      for (const materiau of [objet.material].flat().filter(Boolean)) {
+        materiau.map?.dispose();
+        materiau.gradientMap?.dispose();
+        materiau.dispose();
+      }
+      if (objet.isInstancedMesh) objet.dispose();
+    });
   }
-  const jours = Array.from({ length: 24 }, (_, i) => i + 1);
-  const planches = [0.3, 1.9];
-  const rayonnage = creerRayonnage({ largeur: 4.3, planches });
-  const rayon = creerLivres(cases, [{ y: 1.9, jours: jours.slice(0, 12) }, { y: 0.3, jours: jours.slice(12) }], communs);
-  const fenetre = creerFenetre({ x: -3.12, y: 2.0, largeur: 0.95, hauteur: 2.5, nombreFlocons: 220 });
-  const pied = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 0.7), new THREE.MeshLambertMaterial({ color: "#3a2415" }));
-  pied.position.set(3.08, 0.5, 0.1);
-  const bougiesBasses = creerBougies([[2.96, 1.0, 0.15, 0.42], [3.2, 1.0, 0.0, 0.3], [3.33, 1.0, 0.28, 0.2]]);
-  // Deux bougies sur l'appui de la fenêtre : elles éclairent le côté gauche du rayonnage.
-  const bougiesHautes = creerBougies([[-2.95, 0.82, -0.5, 0.26], [-3.25, 0.82, -0.55, 0.18]]);
-  scene.add(rayonnage, rayon.groupe, fenetre.groupe, pied, bougiesBasses.groupe, bougiesHautes.groupe);
-  return {
-    rayon,
-    ambiances: [fenetre.neige.maj, (dt, t) => bougiesBasses.maj(t), (dt, t) => bougiesHautes.maj(t + 400)],
-    camera: { fov: 28, position: [0, 1.75, 7.6], regard: [0, 1.72, 0] },
-    cible: { position: new THREE.Vector3(0.425, 1.72, 3.7), inclinaison: -0.15 },
+}
+
+function construire(cases, reduit) {
+  const partages = {
+    uProfondeur: { value: null },
+    uResolution: { value: new THREE.Vector2(1, 1) },
+    uRatio: { value: 1 },
+    uTemps: { value: 0.6 },
   };
+  const monde = new THREE.Scene();
+  monde.fog = new THREE.Fog("#1f4362", 22, 75);
+  const vivant = new THREE.Scene();
+  const materiaux = creerMateriaux();
+  const livre = creerLivre(materiaux);
+  const ciel = creerCiel({ cases, reduit, partages });
+  const lueur = creerLueur(partages);
+  monde.add(creerNef(materiaux), livre.groupe, ciel.dome);
+  vivant.add(...ciel.vivants, creerFlamme(partages), lueur.objet);
+  return { partages, monde, vivant, livre, ciel, lueur };
 }
 
-function libererTout(scene) {
-  scene.traverse((objet) => {
-    objet.geometry?.dispose();
-    const materiaux = [objet.material].flat().filter(Boolean);
-    for (const materiau of materiaux) {
-      materiau.map?.dispose();
-      materiau.emissiveMap?.dispose();
-      materiau.dispose();
-    }
-    if (objet.isInstancedMesh) objet.dispose();
-  });
-}
-
-export async function creerScene({ conteneur, grille, reduit }) {
+export async function creerScene({ conteneur, grille, reduit, mouvementReduit }) {
   await attendrePolices();
   const cases = lireCases(grille);
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "low-power" });
-  // Plafond de densité : au-delà de 2 (1,5 sur téléphone), le coût explose sans gain visible.
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, reduit ? 1.5 : 2));
+  const cadrage = reduit ? CADRAGES.vertical : CADRAGES.large;
+  const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "low-power" });
+  // Plafond de densité : le grain et le trait d'encre n'ont pas besoin de plus, et le coût suit le carré.
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, reduit ? 1.25 : 1.5));
   const canvas = renderer.domElement;
   canvas.className = "scene-canvas";
 
-  const scene = new THREE.Scene();
-  const communs = creerMateriauxCommuns();
-  const plan = amenager(scene, cases, reduit, communs);
-  const camera = new THREE.PerspectiveCamera(plan.camera.fov, 2, 0.1, 40);
-  camera.position.set(...plan.camera.position);
-  camera.lookAt(...plan.camera.regard);
-  const livreDuJour = [...plan.rayon.livres.values()].find((l) => l.etat === "du-jour");
+  const { partages, monde, vivant, livre, ciel, lueur } = construire(cases, reduit);
+  const camera = new THREE.PerspectiveCamera(cadrage.fov, 2, 0.5, 200);
+  camera.position.copy(cadrage.base.position);
+  camera.lookAt(cadrage.base.regard);
+  const rendu = creerRendu({ renderer, monde, vivant, camera, partages });
+  const etat = { fixe: false, reduit: mouvementReduit, mesure: false, visibleEcran: true };
 
   const boucle = creerBoucle({
-    rendre: () => renderer.render(scene, camera),
+    rendre: () => rendu.rendre(),
     ambiance: (dt, t) => {
-      for (const maj of plan.ambiances) maj(dt, t);
-      // Le grimoire du jour respire doucement.
-      if (livreDuJour) livreDuJour.dos.emissiveIntensity = 0.5 + 0.15 * Math.sin(t / 650);
+      partages.uTemps.value = t / 1000;
+      // Pendant la mesure, on paie le prix fort (toute la nef à chaque image) pour juger l'appareil.
+      if (etat.mesure) rendu.invalider();
     },
   });
   const moment = creerMoment({
-    scene, boucle, communs, cible: plan.cible,
-    livres: plan.rayon.livres, livreParDefaut: [...plan.rayon.livres.values()][0],
+    boucle, rendu, camera, poses: cadrage, livre, ciel, lueur,
+    estFige: () => etat.fixe || etat.reduit,
   });
+  if (mouvementReduit) boucle.definirAmbiance(false);
 
-  const etat = { fixe: false, visibleEcran: true, survol: null };
   const arret = new AbortController();
   const signal = { signal: arret.signal };
   const observateurs = [];
@@ -111,8 +116,22 @@ export async function creerScene({ conteneur, grille, reduit }) {
     const { width, height } = conteneur.getBoundingClientRect();
     if (!width || !height) return;
     renderer.setSize(width, height, false);
+    rendu.redimensionner();
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
+    if (!moment.estOuvert()) {
+      // La constellation est posée dans le cadre de la caméra de repos.
+      const pose = camera.position.clone();
+      const quaternion = camera.quaternion.clone();
+      camera.position.copy(cadrage.base.position);
+      camera.lookAt(cadrage.base.regard);
+      camera.updateMatrixWorld();
+      ciel.placer(camera, cadrage.constellation);
+      camera.position.copy(pose);
+      camera.quaternion.copy(quaternion);
+      moment.replacer();
+    }
+    rendu.invalider();
     boucle.demander();
   }
 
@@ -120,15 +139,25 @@ export async function creerScene({ conteneur, grille, reduit }) {
     boucle.definirVisible(etat.visibleEcran && document.visibilityState === "visible");
   }
 
-  // Soulève légèrement le livre survolé à la souris ou dont le bouton a le focus clavier.
-  function surligner(jour) {
-    if (etat.survol === jour) return;
-    const ancien = plan.rayon.livres.get(etat.survol);
-    if (ancien) ancien.groupe.position.z = ancien.base.z;
-    etat.survol = jour;
-    const nouveau = plan.rayon.livres.get(jour);
-    if (nouveau) nouveau.groupe.position.z = nouveau.base.z + 0.08;
-    boucle.demander();
+  function boutonDuJour(jour) {
+    return grille.querySelector(`button.case[data-jour="${jour}"]`);
+  }
+
+  // L'étoile la plus proche du pointeur, si elle est assez proche pour être visée.
+  const ecran = new THREE.Vector3();
+  function etoileSous(evenement) {
+    const cadre = canvas.getBoundingClientRect();
+    let meilleure = null;
+    let distanceMin = RAYON_CLIC;
+    ciel.positions.forEach((position, i) => {
+      ecran.copy(position).project(camera);
+      if (ecran.z > 1) return;
+      const x = (ecran.x + 1) / 2 * cadre.width;
+      const y = (1 - ecran.y) / 2 * cadre.height;
+      const d = Math.hypot(x - (evenement.clientX - cadre.left), y - (evenement.clientY - cadre.top));
+      if (d < distanceMin) { distanceMin = d; meilleure = i + 1; }
+    });
+    return meilleure;
   }
 
   const lanceur = new THREE.Raycaster();
@@ -137,52 +166,62 @@ export async function creerScene({ conteneur, grille, reduit }) {
     const cadre = canvas.getBoundingClientRect();
     pointeur.set(((evenement.clientX - cadre.left) / cadre.width) * 2 - 1, -((evenement.clientY - cadre.top) / cadre.height) * 2 + 1);
     lanceur.setFromCamera(pointeur, camera);
-    const touche = lanceur.intersectObjects(plan.rayon.cibles, false).find((t) => t.object.parent.visible);
-    return touche ? touche.object.userData.jour : null;
+    return lanceur.intersectObjects(livre.cibles, false).length > 0 ? jourDuLivre(cases) : null;
   }
 
-  function boutonDuJour(jour) {
-    return grille.querySelector(`button.case[data-jour="${jour}"]`);
+  function cibleSous(evenement) {
+    return etoileSous(evenement) ?? livreSous(evenement);
+  }
+
+  function survoler(jour) {
+    ciel.survoler(jour);
+    boucle.demander();
   }
 
   function detruire() {
     arret.abort();
     boucle.arreter();
     for (const o of observateurs) o.disconnect();
-    libererTout(scene);
+    libererTout(monde, vivant);
+    rendu.liberer();
     renderer.dispose();
     canvas.remove();
     conteneur.hidden = true;
   }
 
-  function brancherEvenements() {
-    // Un seul chemin d'ouverture : cliquer un livre clique le bouton DOM correspondant.
+  function brancherPointeur() {
+    // Un seul chemin d'ouverture : viser une étoile ou le livre clique le bouton DOM correspondant.
     canvas.addEventListener("click", (evenement) => {
-      const jour = livreSous(evenement);
+      const jour = cibleSous(evenement);
       if (jour) boutonDuJour(jour)?.click();
     }, signal);
-    if (matchMedia("(hover: hover)").matches) {
-      canvas.addEventListener("pointermove", (evenement) => {
-        const jour = livreSous(evenement);
-        const bouton = jour && boutonDuJour(jour);
-        canvas.style.cursor = bouton ? (bouton.dataset.etat === "fermee" ? "not-allowed" : "pointer") : "";
-        surligner(jour);
-      }, signal);
-      canvas.addEventListener("pointerleave", () => surligner(null), signal);
-    }
-    grille.addEventListener("focusin", (e) => surligner(Number(e.target.closest("button.case")?.dataset.jour) || null), signal);
-    grille.addEventListener("focusout", () => surligner(null), signal);
-    grille.addEventListener("click", (e) => {
-      const bouton = e.target.closest('button.case[data-etat="fermee"]');
-      if (bouton && !etat.fixe) moment.tressaillir(Number(bouton.dataset.jour));
+    if (!matchMedia("(hover: hover)").matches) return;
+    canvas.addEventListener("pointermove", (evenement) => {
+      const jour = cibleSous(evenement);
+      const bouton = jour && boutonDuJour(jour);
+      canvas.style.cursor = bouton ? (bouton.dataset.etat === "fermee" ? "not-allowed" : "pointer") : "";
+      survoler(jour);
     }, signal);
+    canvas.addEventListener("pointerleave", () => survoler(null), signal);
+  }
+
+  function brancherEvenements() {
+    brancherPointeur();
+    grille.addEventListener("focusin", (e) => survoler(Number(e.target.closest("button.case")?.dataset.jour) || null), signal);
+    grille.addEventListener("focusout", () => survoler(null), signal);
     document.addEventListener("case:ouverte", (evenement) => {
-      if (etat.fixe || !etat.visibleEcran) return;
-      evenement.detail?.retarder?.(moment.ouvrir(evenement.detail.jour));
+      const jour = evenement.detail?.jour;
+      if (!Number.isInteger(jour) || jour < 1 || jour > 24) return;
+      const promesse = moment.ouvrir(jour);
+      // Hors écran ou figée, la scène se met à jour sans faire attendre la page.
+      if (!etat.fixe && !etat.reduit && etat.visibleEcran) evenement.detail.retarder?.(promesse);
     }, signal);
     document.addEventListener("visibilitychange", appliquerVisibilite, signal);
     window.addEventListener("pagehide", (e) => { if (!e.persisted) detruire(); }, signal);
-    matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", (e) => { if (e.matches) detruire(); }, signal);
+    matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", (e) => {
+      etat.reduit = e.matches;
+      boucle.definirAmbiance(!e.matches && !etat.fixe);
+    }, signal);
     canvas.addEventListener("webglcontextlost", detruire, signal);
   }
 
@@ -194,11 +233,10 @@ export async function creerScene({ conteneur, grille, reduit }) {
       appliquerVisibilite();
     });
     vue.observe(conteneur);
-    // Pendant la lecture d'une case, la neige et les bougies s'arrêtent ; à la fermeture, le livre revient.
+    // Pendant la lecture d'une case, le ciel cesse de scintiller ; à la fermeture, le livre se referme.
     const panneau = document.getElementById("panneau");
     const lecture = new MutationObserver(() => {
-      if (etat.fixe) return;
-      boucle.definirAmbiance(!panneau.open);
+      if (!etat.fixe && !etat.reduit) boucle.definirAmbiance(!panneau.open);
       if (!panneau.open) moment.refermer();
     });
     if (panneau) lecture.observe(panneau, { attributes: true, attributeFilter: ["open"] });
@@ -209,10 +247,13 @@ export async function creerScene({ conteneur, grille, reduit }) {
   ajuster();
   brancherEvenements();
   observer();
-  renderer.render(scene, camera);
+  rendu.rendre();
   conteneur.classList.add("est-prete");
+  if (mouvementReduit) return;
 
+  etat.mesure = true;
   const debit = await boucle.mesurerDebit(60);
+  etat.mesure = false;
   conteneur.dataset.debit = String(Math.round(debit));
   if (debit < DEBIT_MINIMUM) {
     etat.fixe = true;

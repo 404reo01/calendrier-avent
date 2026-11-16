@@ -1,125 +1,106 @@
-/* Le panneau d'une case est une page de grimoire : papier ancien, double filet doré,
-   coins en équerre, lettrine, séparateur ❅. La page reste claire de jour comme de nuit
-   (une page lue à la bougie) : encre/page = 13,2:1, rubrique/page = 7,7:1, discret/page = 7,2:1. */
+/* Le panneau d'une case est une page manuscrite : papier bleu très pâle, encre indigo, un filet de marge
+   à la sarcelle comme sur un cahier d'astronome. Ni dorure ni ombre portée.
+   Encre/page = 13,0:1 · encre pâle/page = 7,3:1 · sarcelle/page = 6,2:1. */
 .panneau {
   width: min(40rem, calc(100% - 2 * var(--espace-4)));
   max-height: calc(100dvh - 2 * var(--espace-4));
-  padding: var(--espace-2);
-  border: 0;
-  border-radius: 2px;
-  background: var(--page-fond);
+  padding: 0;
+  border: var(--epaisseur-trait) solid var(--page-encre);
+  border-radius: 3px;
+  background: var(--grain), var(--page-fond);
   color: var(--page-encre);
-  box-shadow: 0 0 0 1px var(--or-filet), 0 1.5rem 3rem rgb(0 0 0 / 0.45);
 }
 .panneau::backdrop { background: var(--couleur-voile); }
-/* La page « se pose » après le moment 3D : on n'anime que transform et opacity. */
-.panneau[open] { animation: page-posee 320ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+/* La page se pose après le moment 3D : on n'anime que transform et opacity. */
+.panneau[open] { animation: page-posee 360ms cubic-bezier(0.2, 0.7, 0.2, 1); }
 
 @keyframes page-posee {
-  from { opacity: 0; transform: translateY(0.75rem) scale(0.98); }
+  from { opacity: 0; transform: translateY(1rem); }
   to { opacity: 1; transform: none; }
 }
 
 .panneau-corps {
   display: grid;
   gap: var(--espace-4);
-  padding: var(--espace-5) var(--espace-5) var(--espace-5);
-  border: 4px double var(--or-filet);
-  /* Quatre coins en équerre, comme une carte ex-libris. */
-  background:
-    linear-gradient(var(--page-rubrique), var(--page-rubrique)) 6px 6px / 1.25rem 2px no-repeat,
-    linear-gradient(var(--page-rubrique), var(--page-rubrique)) 6px 6px / 2px 1.25rem no-repeat,
-    linear-gradient(var(--page-rubrique), var(--page-rubrique)) calc(100% - 6px) 6px / 1.25rem 2px no-repeat,
-    linear-gradient(var(--page-rubrique), var(--page-rubrique)) calc(100% - 6px) 6px / 2px 1.25rem no-repeat,
-    linear-gradient(var(--page-rubrique), var(--page-rubrique)) 6px calc(100% - 6px) / 1.25rem 2px no-repeat,
-    linear-gradient(var(--page-rubrique), var(--page-rubrique)) 6px calc(100% - 6px) / 2px 1.25rem no-repeat,
-    linear-gradient(var(--page-rubrique), var(--page-rubrique)) calc(100% - 6px) calc(100% - 6px) / 1.25rem 2px no-repeat,
-    linear-gradient(var(--page-rubrique), var(--page-rubrique)) calc(100% - 6px) calc(100% - 6px) / 2px 1.25rem no-repeat;
+  padding: var(--espace-6) var(--espace-5) var(--espace-5) calc(var(--espace-5) + var(--espace-4));
+  /* Le filet de marge, tracé une fois à gauche. */
+  background: linear-gradient(var(--page-sarcelle), var(--page-sarcelle)) var(--espace-5) 0 / 1px 100% no-repeat;
 }
 
 .panneau-jour {
   margin: 0;
-  color: var(--page-discret);
-  font-family: var(--police-titre);
-  font-size: var(--taille-petite);
-  letter-spacing: 0.08em;
-  text-align: center;
+  color: var(--page-sarcelle);
+  font-size: var(--taille-base);
+  font-style: italic;
 }
 .panneau-titre {
   margin: 0;
   color: var(--page-encre);
   font-family: var(--police-titre);
-  font-size: var(--taille-grande);
+  font-size: clamp(1.875rem, 6vw, 2.5rem);
   font-weight: 700;
-  line-height: 1.2;
-  text-align: center;
+  line-height: 1.05;
   text-wrap: balance;
 }
-.panneau-titre::after {
-  content: "❅" / "";
-  display: block;
-  margin-top: var(--espace-2);
-  color: var(--page-rubrique);
-  font-size: var(--taille-base);
-}
 
-/* Lettrine : la première lettre de l'accroche descend sur trois lignes, à l'encre de cire. */
-.panneau-accroche { margin: 0; font-size: var(--taille-moyenne); line-height: 1.5; }
+/* Lettrine : la première lettre de l'accroche descend sur trois lignes, en gothique. */
+.panneau-accroche { margin: 0; font-size: var(--taille-moyenne); line-height: 1.55; }
 .panneau-accroche:not(.sans-lettrine)::first-letter {
   float: left;
-  margin: 0.08em 0.12em 0 0;
-  color: var(--page-rubrique);
+  margin: 0.06em 0.1em 0 0;
+  color: var(--page-sarcelle);
   font-family: var(--police-titre);
-  font-size: 3.4em;
+  font-size: 3.6em;
   font-weight: 700;
-  line-height: 0.82;
+  line-height: 0.8;
 }
 
 .panneau-bloc { display: grid; gap: var(--espace-2); }
+/* Une petite étoile à l'encre ouvre chaque section (décorative : texte alternatif vide). */
+.panneau-bloc::before {
+  content: "✦" / "";
+  color: var(--page-sarcelle);
+  font-size: var(--taille-petite);
+  line-height: 1;
+}
 .panneau-bloc h3 {
   margin: 0;
-  color: var(--page-rubrique);
+  color: var(--page-encre);
   font-family: var(--police-titre);
-  font-size: var(--taille-base);
+  font-size: var(--taille-moyenne);
   font-weight: 700;
-  letter-spacing: 0.03em;
+  line-height: 1.2;
 }
 .panneau-bloc p { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
 
-/* Séparateur ❅ entre les sections de la page (décoratif : texte alternatif vide). */
-.panneau-bloc::before {
-  content: "❅" / "";
-  justify-self: center;
-  color: var(--or-filet);
-  line-height: 1;
-}
-
-.panneau-skill p { color: var(--page-discret); }
+.panneau-skill p { color: var(--page-pale); }
 .panneau-skill p:first-of-type { color: var(--page-encre); font-weight: 600; }
 
-.panneau-incantation .panneau-aide { color: var(--page-discret); font-size: var(--taille-petite); font-style: italic; }
+.panneau-incantation .panneau-aide { color: var(--page-pale); font-size: var(--taille-petite); font-style: italic; }
 .panneau-formule {
-  padding: var(--espace-3) var(--espace-4);
-  border-left: 4px double var(--or-filet);
-  background: rgb(201 160 70 / 0.12);
+  padding: var(--espace-3) 0 var(--espace-3) var(--espace-4);
+  border-left: 2px solid var(--page-encre);
   font-size: var(--taille-moyenne);
   font-style: italic;
+  line-height: 1.5;
 }
 
-.panneau-lien { color: var(--page-rubrique); text-underline-offset: 0.2em; }
+.panneau-lien { color: var(--page-sarcelle); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
 .panneau .panneau-lien:focus-visible,
-.panneau-fermer:focus-visible { outline-color: var(--cuir-indigo); }
+.panneau-fermer:focus-visible { outline-color: var(--page-sarcelle); }
 
 .panneau-fermer {
-  justify-self: center;
+  justify-self: start;
   min-height: 2.75rem;
+  margin-top: var(--espace-2);
   padding: var(--espace-2) var(--espace-5);
-  border: 3px double var(--page-fond);
-  border-radius: 2px;
-  background: var(--page-rubrique);
-  color: var(--page-fond);
-  font-family: var(--police-titre);
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  border: 1.5px solid var(--page-encre);
+  border-radius: 999px;
+  background: none;
+  color: var(--page-encre);
+  font: 600 var(--taille-base) / 1 var(--police-texte);
   cursor: pointer;
+}
+@media (hover: hover) {
+  .panneau-fermer:hover { background: var(--page-encre); color: var(--page-fond); }
 }

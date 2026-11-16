@@ -1,55 +1,46 @@
-/* Thème « Le Grimoire des skills » : tous les choix visuels vivent dans ces tokens.
-   Clair = le jour (papier et encre). Sombre = la nuit (bougies et neige bleue).
-   Contrastes calculés (WCAG) : encre/papier 12,4:1 · parchemin/nuit 13,1:1 ·
-   texte discret 6,7:1 (clair) et 8,1:1 (sombre) · or sur cuir ≥ 7,1:1 · encre/page 13,2:1. */
+/* Thème « La Nef étoilée » : de l'encre sur un papier bleu. Tous les choix visuels vivent dans ces tokens.
+   Clair = papier bleu pâle, encre indigo. Sombre = la nuit de la nef.
+   Un seul point chaud, comme la bougie de la scène : la flamme, réservée à l'étoile du jour.
+   Contrastes calculés (WCAG) : encre/papier 12,1:1 · encre pâle/papier 6,7:1 · sarcelle/papier 5,8:1 ·
+   flamme/papier 4,2:1 (graphisme, ≥ 3:1) · texte/nuit 14,1:1 · texte pâle/nuit 8,6:1 · flamme/nuit 9,9:1 ·
+   trait/nuit 4,2:1 · encre/page 13,0:1 · sarcelle/page 6,2:1. */
 :root {
   color-scheme: light;
 
-  /* Matières fixes, communes aux deux thèmes : un livre reste un livre, de jour comme de nuit. */
-  --cuir-bordeaux: #5b1f26;
-  --cuir-indigo: #23305a;
-  --cuir-brun: #4a2f1d;
-  --cuir-prune: #43233f;
-  --cuir-ardoise: #2f3a44;
-  --or-sur-cuir: #e6c87a;
-  --or-filet: #c9a046;
-  --cire: #8a2430;
-  --cire-claire: #b4434c;
-  --fer: #8d8f94;
-  --page-fond: #f1e6cc;
-  --page-encre: #2a1d12;
-  --page-rubrique: #7f2330;
-  --page-discret: #5a4632;
+  /* La page manuscrite reste un papier, de jour comme de nuit. */
+  --page-fond: #eef3f6;
+  --page-encre: #1c2554;
+  --page-pale: #3d4f78;
+  --page-sarcelle: #2f6168;
 
-  /* Jour */
-  --couleur-fond: #ebdfc5;
-  --couleur-fond-halo: #f3e9d2;
-  --couleur-surface: #f5ecd8;
-  --couleur-texte: #2a1d12;
-  --couleur-texte-discret: #5a4632;
-  --couleur-bordure: #8c7350;
-  --couleur-accent: #8a2430;
-  --couleur-accent-texte: #f5ecd8;
-  --couleur-dorure: #7d5a14;
-  --couleur-bois: #5a3a22;
-  --couleur-bois-arete: #7a5233;
-  --couleur-demo-fond: #2a1d12;
-  --couleur-demo-texte: #f1e6cc;
-  --couleur-erreur: #8a2430;
-  --couleur-voile: rgb(18 26 46 / 0.72);
-  --couleur-focus: #23305a;
-  --couleur-scene-cadre: #2a1d12;
+  /* Jour : papier bleu pâle */
+  --couleur-fond: #e3ebf1;
+  --couleur-surface: #eef3f6;
+  --couleur-texte: #1c2554;
+  --couleur-texte-pale: #3d4f78;
+  --couleur-trait: #5f7499;
+  --couleur-sarcelle: #2f6168;
+  --couleur-flamme: #a8591a;
+  --couleur-etoile: #1c2554;
+  --couleur-demo-fond: #1c2554;
+  --couleur-demo-texte: #eef3f6;
+  --couleur-erreur: #8c2a2a;
+  --couleur-voile: rgb(8 16 40 / 0.72);
+  --couleur-focus: #2f6168;
+  --couleur-cadre: #1c2554;
+  /* Grain de papier, statique (pas de calque en mode de fusion) : un bruit SVG posé une fois. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.11 0 0 0 0 0.15 0 0 0 0 0.33 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
 
-  --police-texte: "Alegreya", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --police-titre: "Cinzel", "Trajan Pro", "Times New Roman", serif;
+  --police-texte: "Vollkorn", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --police-titre: "Grenze Gotisch", "Vollkorn", Georgia, serif;
 
-  /* Échelle typographique (quarte, 4:3) */
-  --taille-petite: 0.8125rem;
+  /* Échelle typographique (quinte, 3:2, resserrée en bas) */
+  --taille-petite: 0.875rem;
   --taille-base: 1.0625rem;
   --taille-moyenne: 1.25rem;
-  --taille-grande: 1.6875rem;
-  --taille-titre: clamp(1.75rem, 6vw, 2.75rem);
-  --interligne: 1.6;
+  --taille-grande: 1.875rem;
+  --taille-titre: clamp(2.5rem, 9vw, 4.75rem);
+  --interligne: 1.62;
 
   --espace-1: 0.25rem;
   --espace-2: 0.5rem;
@@ -57,43 +48,55 @@
   --espace-4: 1rem;
   --espace-5: 1.5rem;
   --espace-6: 2.5rem;
+  --espace-7: 4rem;
 
-  --rayon: 0.25rem;
-  --epaisseur-bordure: 1px;
+  --epaisseur-trait: 1px;
   --epaisseur-focus: 3px;
-  --largeur-page: 66rem;
+  --largeur-page: 76rem;
   --duree: 180ms;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --couleur-fond: #121a2e;
-    --couleur-fond-halo: #1c2742;
-    --couleur-surface: #1a2440;
-    --couleur-texte: #ecdfc4;
-    --couleur-texte-discret: #b9b0a0;
-    --couleur-bordure: #5d6a8a;
-    --couleur-accent: #d8b25a;
-    --couleur-accent-texte: #121a2e;
-    --couleur-dorure: #d8b25a;
-    --couleur-bois: #2c1c12;
-    --couleur-bois-arete: #4a3020;
-    --couleur-demo-fond: #d8b25a;
-    --couleur-demo-texte: #121a2e;
-    --couleur-erreur: #f0a7a0;
-    --couleur-voile: rgb(6 10 20 / 0.78);
-    --couleur-focus: #ffd98a;
-    --couleur-scene-cadre: #0b1020;
+    --couleur-fond: #0b1632;
+    --couleur-surface: #13244a;
+    --couleur-texte: #dce6f0;
+    --couleur-texte-pale: #a3b6cf;
+    --couleur-trait: #5f7da8;
+    --couleur-sarcelle: #8cc6c4;
+    --couleur-flamme: #f2b65a;
+    --couleur-etoile: #eef3fa;
+    --couleur-demo-fond: #8cc6c4;
+    --couleur-demo-texte: #0b1632;
+    --couleur-erreur: #f3a9a0;
+    --couleur-voile: rgb(3 8 22 / 0.8);
+    --couleur-focus: #8cc6c4;
+    --couleur-cadre: #2a426e;
+    /* De nuit, quelques étoiles fixes semées sur la page : sans WebGL, la nuit reste là. */
+    --etoiles:
+      radial-gradient(1px 1px at 12% 18%, rgb(220 232 248 / 0.7), transparent),
+      radial-gradient(1px 1px at 47% 9%, rgb(220 232 248 / 0.5), transparent),
+      radial-gradient(1.5px 1.5px at 81% 22%, rgb(220 232 248 / 0.8), transparent),
+      radial-gradient(1px 1px at 66% 41%, rgb(220 232 248 / 0.4), transparent),
+      radial-gradient(1px 1px at 28% 63%, rgb(220 232 248 / 0.5), transparent),
+      radial-gradient(1.5px 1.5px at 91% 77%, rgb(220 232 248 / 0.6), transparent),
+      radial-gradient(1px 1px at 6% 88%, rgb(220 232 248 / 0.5), transparent);
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.7 0 0 0 0 0.9 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
   }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Le fond de page sur html (couleur + étoiles semées, en motif de 23 × 19 rem), le grain sur body. */
+html {
+  background-color: var(--couleur-fond);
+  background-image: var(--etoiles, none);
+  background-size: 23rem 19rem;
+}
 body {
   margin: 0;
-  /* Un halo statique (pas de calque fixe ni de mode de fusion) : la lueur d'une bougie au centre. */
-  background: radial-gradient(ellipse 80% 50% at 50% 0%, var(--couleur-fond-halo), transparent 70%), var(--couleur-fond);
+  background: var(--grain);
   color: var(--couleur-texte);
   font-family: var(--police-texte);
   font-size: var(--taille-base);
@@ -105,33 +108,29 @@ body {
   gap: var(--espace-5);
   max-width: var(--largeur-page);
   margin-inline: auto;
-  padding: var(--espace-5) var(--espace-4) var(--espace-6);
+  padding: var(--espace-5) var(--espace-4) var(--espace-7);
 }
 
-.entete { display: grid; gap: var(--espace-2); justify-items: center; text-align: center; }
+/* L'en-tête est dans l'axe de la nef : centré, comme le pupitre au bout des marches. */
+.entete { display: grid; gap: var(--espace-3); justify-items: center; text-align: center; padding-top: var(--espace-4); }
 .titre-page {
   margin: 0;
   font-family: var(--police-titre);
   font-size: var(--taille-titre);
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: 0.02em;
+  line-height: 0.95;
+  letter-spacing: 0.005em;
   text-wrap: balance;
 }
-/* Le filet doré double sous le titre, ponctué du flocon : la seule « dorure » de l'en-tête. */
-.titre-page::after {
-  content: "❅" / "";
-  display: block;
-  margin-top: var(--espace-2);
-  color: var(--couleur-dorure);
+.intro {
+  margin: 0;
+  max-width: 50ch;
+  color: var(--couleur-texte-pale);
   font-size: var(--taille-moyenne);
-  line-height: 1;
-  background: linear-gradient(var(--couleur-dorure), var(--couleur-dorure)) left 50% / calc(50% - 1.25rem) 1px no-repeat,
-              linear-gradient(var(--couleur-dorure), var(--couleur-dorure)) left calc(50% + 4px) / calc(50% - 1.25rem) 1px no-repeat,
-              linear-gradient(var(--couleur-dorure), var(--couleur-dorure)) right 50% / calc(50% - 1.25rem) 1px no-repeat,
-              linear-gradient(var(--couleur-dorure), var(--couleur-dorure)) right calc(50% + 4px) / calc(50% - 1.25rem) 1px no-repeat;
+  font-style: italic;
+  line-height: 1.5;
+  text-wrap: pretty;
 }
-.intro { margin: 0; max-width: 56ch; color: var(--couleur-texte-discret); font-style: italic; }
 
 .bandeau-demo {
   margin: 0;
@@ -143,12 +142,14 @@ body {
 }
 
 .message {
+  justify-self: center;
+  max-width: 44rem;
   margin: 0;
-  padding: var(--espace-3) var(--espace-4);
-  border: var(--epaisseur-bordure) solid var(--couleur-bordure);
-  border-left: 4px double var(--couleur-dorure);
-  border-radius: var(--rayon);
+  padding: var(--espace-3) var(--espace-5);
+  border: var(--epaisseur-trait) solid var(--couleur-trait);
+  border-radius: 999px;
   background: var(--couleur-surface);
+  text-align: center;
 }
 .message.est-erreur { border-color: var(--couleur-erreur); color: var(--couleur-erreur); }
 

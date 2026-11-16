@@ -3,7 +3,7 @@ import { libelleOuverture } from "./temps.js";
 import { jetonDuJour } from "./donnees.js";
 
 // Pictogrammes décoratifs (aria-hidden) : le mot, lui, est lu par les lecteurs d'écran.
-const SIGNES = { ouverte: "✓", "du-jour": "✦", fermee: "🔒" };
+const SIGNES = { ouverte: "✦", "du-jour": "✷", fermee: "○" };
 
 export function libelleEtat(caseEtat) {
   if (caseEtat.etat === "ouverte") return "Ouverte";
@@ -20,9 +20,9 @@ function construireCase(caseEtat, etat, construction, surClic) {
     classe: "case",
     attributs: { type: "button", "data-jour": jour, "data-etat": caseEtat.etat },
   }, [
-    el("span", { classe: "case-numero", texte: String(jour) }),
-    // Le sceau (dessiné en CSS) porte le pictogramme texte, utile si la feuille de style ne charge pas.
+    // L'étoile (dessinée en CSS) porte le pictogramme texte, utile si la feuille de style ne charge pas.
     el("span", { classe: "case-signe", texte: SIGNES[caseEtat.etat] ?? "", attributs: { "aria-hidden": "true" } }),
+    el("span", { classe: "case-numero", texte: String(jour) }),
     el("span", { classe: "case-etat", texte: libelle }),
   ]);
 

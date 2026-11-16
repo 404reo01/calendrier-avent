@@ -1,6 +1,6 @@
 // Point d'entrée léger de la 3D : il décide s'il faut la charger, sans jamais importer three.js
-// tant que ce n'est pas utile. Sans WebGL, avec le mouvement réduit ou en économie de données,
-// rien ne se charge et la grille de livres en CSS suffit.
+// tant que ce n'est pas utile. Sans WebGL ou en économie de données, rien ne se charge et la carte
+// du ciel en CSS suffit. Avec le mouvement réduit, la scène se charge mais reste figée.
 
 function webglDisponible() {
   try {
@@ -16,12 +16,11 @@ function webglDisponible() {
 }
 
 export function sceneAutorisee() {
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
   if (navigator.connection?.saveData) return false;
   return webglDisponible();
 }
 
-// Petit écran ou écran tactile étroit : la scène se réduit au livre du jour et à la neige.
+// Petit écran ou écran tactile étroit : cadrage vertical (le ciel en haut, le pupitre en bas), coût réduit.
 function modeReduit() {
   return matchMedia("(max-width: 40rem)").matches
     || matchMedia("(pointer: coarse) and (max-width: 64rem)").matches;
@@ -35,7 +34,8 @@ export async function chargerScene({ conteneur, grille }) {
   conteneur.hidden = false;
   try {
     const { creerScene } = await import("./scene.js");
-    await creerScene({ conteneur, grille, reduit });
+    const mouvementReduit = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    await creerScene({ conteneur, grille, reduit, mouvementReduit });
   } catch (erreur) {
     // La 3D est un bonus : en cas d'échec, on la retire proprement et on le dit dans la console.
     conteneur.replaceChildren();

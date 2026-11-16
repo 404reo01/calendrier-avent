@@ -1,143 +1,157 @@
-/* Le rayonnage : 24 dos de livres posés sur des planches.
-   Mobile d'abord : 4 livres par planche à 360 px, 12 par planche sur grand écran.
-   Un état se lit sans la couleur : le mot écrit, plus la forme du sceau
-   (intact + chaîne = fermée ; intact + étoile + livre qui dépasse = aujourd'hui ; fendu = ouverte). */
+/* La carte du ciel : 24 étoiles numérotées, tracées à l'encre. Pas de cartes ni de boîtes :
+   l'étoile, son numéro, son état écrit en toutes lettres.
+   Un état se lit sans la couleur : cercle vide (pas encore ouverte), étoile pleine (ouverte),
+   étoile cerclée qui respire (aujourd'hui), et toujours le mot.
+   Mobile d'abord : 4 colonnes à 360 px, 12 sur grand écran, en quinconce comme un relevé d'astronome. */
+.carte { display: grid; gap: var(--espace-5); padding-top: var(--espace-4); }
+
+.carte-entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--espace-2) var(--espace-5);
+  padding-bottom: var(--espace-3);
+  border-bottom: var(--epaisseur-trait) solid var(--couleur-trait);
+}
+.carte-titre {
+  margin: 0;
+  font-family: var(--police-titre);
+  font-size: var(--taille-grande);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.legende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espace-1) var(--espace-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--couleur-texte-pale);
+  font-size: var(--taille-petite);
+}
+.legende li { display: flex; align-items: center; gap: var(--espace-2); }
+.legende-signe { --taille-signe: 1rem; }
+
 .grille {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  column-gap: 0;
-  row-gap: var(--espace-5);
+  gap: var(--espace-5) var(--espace-1);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 @media (min-width: 30rem) { .grille { grid-template-columns: repeat(6, 1fr); } }
 @media (min-width: 46rem) { .grille { grid-template-columns: repeat(8, 1fr); } }
-@media (min-width: 62rem) { .grille { grid-template-columns: repeat(12, 1fr); } }
-
-/* Chaque emplacement porte son morceau de planche : bout à bout, ils forment l'étagère. */
-.grille > li {
-  display: flex;
-  align-items: flex-end;
-  min-height: 11.5rem;
-  padding: var(--espace-3) 3px 0;
-  border-bottom: 0.625rem solid var(--couleur-bois);
-  box-shadow: 0 1px 0 var(--couleur-bois-arete);
+@media (min-width: 62rem) {
+  .grille { grid-template-columns: repeat(12, 1fr); row-gap: var(--espace-6); }
+  /* Quinconce : une étoile sur deux descend d'un cran, la grille cesse d'être un tableau. */
+  .grille > li:nth-child(even) { transform: translateY(1.75rem); }
 }
 
 .case {
-  --cuir: var(--cuir-bordeaux);
-  --hauteur: 100%;
-  position: relative;
   display: grid;
-  grid-template-rows: auto 1fr auto;
   justify-items: center;
-  align-items: center;
-  gap: var(--espace-2);
+  align-content: start;
+  gap: var(--espace-1);
   width: 100%;
-  height: var(--hauteur);
-  min-height: 10rem;
-  padding: var(--espace-4) var(--espace-1) var(--espace-3);
-  overflow: hidden;
-  /* Contexte d'empilement propre : la chaîne (z-index -1) passe sous le sceau mais sur le cuir. */
-  isolation: isolate;
+  min-height: 2.75rem;
+  padding: var(--espace-2) var(--espace-1);
   border: 0;
-  border-radius: 3px 3px 1px 1px;
-  /* Deux nerfs dorés en haut et en bas du dos, sur un cuir légèrement bombé. */
-  background:
-    linear-gradient(var(--or-filet), var(--or-filet)) 0 0.45rem / 100% 2px no-repeat,
-    linear-gradient(var(--or-filet), var(--or-filet)) 0 0.7rem / 100% 1px no-repeat,
-    linear-gradient(var(--or-filet), var(--or-filet)) 0 calc(100% - 0.45rem) / 100% 2px no-repeat,
-    linear-gradient(var(--or-filet), var(--or-filet)) 0 calc(100% - 0.7rem) / 100% 1px no-repeat,
-    linear-gradient(90deg, rgb(0 0 0 / 0.35), transparent 22%, rgb(255 255 255 / 0.07) 50%, transparent 78%, rgb(0 0 0 / 0.35)),
-    var(--cuir);
-  color: var(--or-sur-cuir);
+  border-radius: 0.5rem;
+  background: none;
+  color: var(--couleur-texte);
   font: inherit;
   text-align: center;
   cursor: pointer;
-  transition: transform var(--duree) ease-out;
 }
 
-/* Cuirs et hauteurs variés, comme un vrai rayonnage (purement décoratif). */
-.grille > li:nth-child(5n + 2) .case { --cuir: var(--cuir-indigo); --hauteur: 94%; }
-.grille > li:nth-child(5n + 3) .case { --cuir: var(--cuir-brun); --hauteur: 97%; }
-.grille > li:nth-child(5n + 4) .case { --cuir: var(--cuir-prune); --hauteur: 91%; }
-.grille > li:nth-child(5n + 5) .case { --cuir: var(--cuir-ardoise); --hauteur: 96%; }
-
-/* L'étiquette du dos : numéro gravé dans un cartouche à double filet. */
 .case-numero {
-  min-width: 2.6rem;
-  padding: 0.1rem var(--espace-1);
-  border: 3px double var(--or-filet);
   font-family: var(--police-titre);
-  font-size: var(--taille-grande);
+  font-size: 1.875rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1;
 }
 
-/* Le sceau de cire, dessiné en CSS ; le pictogramme texte reste en secours si la feuille ne charge pas. */
-.case-signe {
+/* Le signe dessiné en CSS ; le pictogramme texte reste en secours si la feuille ne charge pas. */
+.case-signe,
+.legende-signe {
+  --taille-signe: 1.75rem;
   position: relative;
   display: grid;
   place-items: center;
-  width: 1.9rem;
-  height: 1.9rem;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--cire-claire), var(--cire) 60%);
-  box-shadow: 0 0 0 2px rgb(0 0 0 / 0.25);
+  width: var(--taille-signe);
+  height: var(--taille-signe);
   color: transparent;
   font-size: 0;
+}
+.case-signe::before,
+.legende-signe::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* Pas encore ouverte : un cercle d'encre, vide. */
+[data-etat="fermee"] > .case-signe::before,
+.legende-signe[data-etat="fermee"]::before {
+  inset: 22%;
+  border: 1.5px solid var(--couleur-trait);
+  border-radius: 50%;
+}
+
+/* Ouverte : une étoile à quatre branches, pleine. */
+[data-etat="ouverte"] > .case-signe::before,
+[data-etat="du-jour"] > .case-signe::before,
+.legende-signe[data-etat="ouverte"]::before,
+.legende-signe[data-etat="du-jour"]::before {
+  background: var(--couleur-etoile);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+}
+
+/* Aujourd'hui : l'étoile prend la couleur de la flamme et porte un anneau qui respire. */
+[data-etat="du-jour"] > .case-signe::before,
+.legende-signe[data-etat="du-jour"]::before { background: var(--couleur-flamme); }
+[data-etat="du-jour"] > .case-signe::after,
+.legende-signe[data-etat="du-jour"]::after {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  border: 1.5px solid var(--couleur-flamme);
+  border-radius: 50%;
+}
+[data-etat="du-jour"] > .case-signe::after { animation: respire 2.8s ease-in-out infinite; }
+@keyframes respire {
+  50% { transform: scale(1.18); opacity: 0.45; }
 }
 
 .case-etat {
   max-width: 100%;
-  font-size: var(--taille-petite);
+  color: var(--couleur-texte-pale);
+  font-size: 0.8125rem;
+  font-style: italic;
   line-height: 1.25;
-  overflow-wrap: anywhere;
 }
-
-/* Fermée : une chaîne de fer barre le dos, le sceau est intact. */
+@media (min-width: 30rem) { .case-etat { font-size: var(--taille-petite); } }
+.case[data-etat="ouverte"] .case-etat { color: var(--couleur-texte); }
+.case[data-etat="du-jour"] .case-etat { color: var(--couleur-texte); font-style: normal; font-weight: 600; }
 .case[data-etat="fermee"] { cursor: not-allowed; }
-.case[data-etat="fermee"] .case-signe::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: calc(50% - 0.35rem);
-  left: -4rem;
-  right: -4rem;
-  height: 0.7rem;
-  background: radial-gradient(ellipse 0.3rem 0.24rem at 50% 50%, transparent 52%, var(--fer) 56% 80%, transparent 84%) 0 0 / 0.55rem 0.7rem repeat-x;
-}
-
-/* Ouverte : le sceau est fendu en deux. */
-.case[data-etat="ouverte"] .case-signe {
-  background:
-    linear-gradient(105deg, transparent 44%, var(--cuir) 44% 56%, transparent 56%),
-    radial-gradient(circle at 35% 30%, var(--cire-claire), var(--cire) 60%);
-  transform: rotate(-12deg);
-}
-
-/* Aujourd'hui : le livre dépasse du rayon et luit ; une étoile d'or orne le sceau. */
-.case[data-etat="du-jour"] {
-  transform: translateY(calc(-1 * var(--espace-3)));
-  box-shadow: 0 0 0 2px var(--or-filet), 0 0 1.25rem 0.25rem rgb(232 176 74 / 0.45);
-}
-.case[data-etat="du-jour"] .case-signe {
-  color: var(--or-sur-cuir);
-  font-size: 1.1rem;
-  line-height: 1;
-}
-.case[data-etat="du-jour"] .case-etat { font-weight: 700; }
+.case[data-etat="fermee"] .case-numero { color: var(--couleur-texte-pale); }
 
 /* Le survol ne s'active qu'avec une vraie souris : rien au toucher. */
 @media (hover: hover) {
-  .case[data-etat="ouverte"]:hover { transform: translateY(calc(-1 * var(--espace-2))); }
+  .case:not([data-etat="fermee"]):hover .case-numero {
+    text-decoration: underline 1.5px;
+    text-underline-offset: 0.2em;
+  }
 }
 
 .case-construction {
   padding: 0 var(--espace-1);
-  background: var(--page-fond);
-  color: var(--cire);
+  border: var(--epaisseur-trait) solid var(--couleur-erreur);
+  color: var(--couleur-erreur);
   font-size: var(--taille-petite);
-  font-weight: 700;
+  font-weight: 600;
 }

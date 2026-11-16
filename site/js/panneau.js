@@ -42,7 +42,7 @@ function blocSkill(skill) {
 
 export function contenuDeLaCase(donnees, jour) {
   const enfants = [
-    el("p", { classe: "panneau-jour", texte: `Grimoire n° ${jour}` }),
+    el("p", { classe: "panneau-jour", texte: `L'étoile du ${jour === 1 ? "1er" : jour} décembre` }),
     el("h2", { classe: "panneau-titre", texte: donnees.titre, attributs: { id: "panneau-titre" } }),
   ];
   // Lettrine seulement si le texte commence par une lettre (pas « [D » ni « « »).
