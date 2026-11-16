@@ -37,3 +37,24 @@ Choisir un duo dans le même esprit que LifeIsARealBook (une sérif ancienne pou
 
 ## À noter pour le making-of
 LifeIsARealBook a utilisé le skill communautaire **Taste Skill** pour son moodboard d'hiver : c'est un candidat pour une case, s'il sert ici (à auditer avant de l'installer).
+
+---
+
+# Révision 2 (2026-11-16, soir) — « La Nef étoilée »
+
+Rayan trouve la v1 trop générique (cuir, dorures, bougies, Cinzel : c'est l'imaginaire « bibliothèque » par défaut). Nouvelle référence : une illustration Pinterest (pin 681802831134084857, « Livros | Artes »), à **s'inspirer sans la copier** (c'est l'œuvre de quelqu'un : aucun de ses pixels dans le projet).
+
+## Ce que dit la référence
+- **Une nef gothique de bibliothèque À CIEL OUVERT** : la voûte n'existe plus, au-dessus des rayonnages il y a une nuit étoilée immense, avec une Voie lactée. Le ciel occupe la moitié de l'image : c'est lui le héros.
+- **Un rendu illustré, pas réaliste** : trait d'encre fin sur les arêtes, lavis d'aquarelle, grain de papier, ombres posées en aplats.
+- **Un camaïeu bleu nuit, bleu-vert, sarcelle** et **un seul point chaud** : la flamme d'une bougie sur un pupitre. Tout le reste est froid.
+- **Une verticalité** : rayonnages immenses, hautes fenêtres en ogive, colonnes, des marches qui montent vers un pupitre, une statue dans une niche, un dallage en perspective.
+
+## Ce que ça devient pour le calendrier
+- **Le visiteur est au pied des marches.** Le livre du jour est posé sur le pupitre, éclairé par la seule bougie.
+- **24 étoiles = 24 skills.** Au-dessus de la nef, une constellation se trace jour après jour : une étoile allumée par case ouverte, reliée aux précédentes par un trait.
+  - Les cases fermées sont des étoiles éteintes : un simple cercle à l'encre.
+  - L'étoile du jour pulse doucement.
+- **Le moment waw (un seul)** : le livre s'ouvre sur le pupitre et ses pages tournent. Une lueur monte de la page vers le ciel, et la nouvelle étoile s'allume et se relie à la constellation. Puis la page du grimoire s'affiche (DOM).
+- **On abandonne** l'or, le cuir, les sceaux de cire et les chaînes, Cinzel, les doubles filets dorés et le rayonnage de 24 livres numérotés.
+- **L'interface DOM** est dessinée à l'encre sur un papier bleu : traits fins, sans dorure ni ombre portée. La grille accessible devient la carte du ciel, avec 24 étoiles numérotées.
