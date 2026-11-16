@@ -80,3 +80,17 @@ export async function verifierFuite({ sortie, casesInterdites /* Case[] */ }) /*
 - La grille est une `<ol class="grille">` de 24 `<li><button class="case" data-jour="n" data-etat="ouverte|du-jour|fermee">`.
 - À l'ouverture d'une case, la page émet `document.dispatchEvent(new CustomEvent("case:ouverte", { detail: { jour } }))`. La 3D s'y branche.
 - La page ne recalcule jamais les états avec l'horloge de l'appareil : elle affiche `etat.json`.
+
+## Arbitrages de l'orchestrateur (2026-11-16, après la rédaction des tests)
+
+1. **« du-jour »** : la règle des 24 h / 5 min est supprimée, car elle n'est jamais observable. « du-jour » = la plus haute case due, sauf quand `fini` est vrai.
+2. **`verifierFuite({ sortie, casesInterdites, cle? })`** : si `cle` est fournie, un fichier `cases/<jetonCase(jour, cle)>.json` présent pour une case interdite est une fuite.
+3. **`fichier`** dans une fuite = chemin relatif à `sortie`, avec des séparateurs `/`.
+4. **Une fuite par couple (fichier, jour)**, même si plusieurs textes de la case sont trouvés.
+5. **Saison** : l'année à Paris, et l'année précédente en janvier et février. De mars à novembre, c'est l'année en cours (le décembre à venir).
+6. **En accéléré**, `saison` = `saisonDe(maintenant)` aussi. `heureOuverture` est ignorée.
+7. **`CLE_CALENDRIER` vide** (`""`) = « manquante ».
+8. **`construire()` renvoie `{ etat, jetons }`**, où `etat` est l'objet exact écrit dans `etat.json` (avec `jetons` et `genereLe`).
+9. **`construire.mjs` ne lance la CLI** que s'il est exécuté directement (garde sur `import.meta.url` / `process.argv[1]`).
+10. **`--maintenant` est refusé** dès que `CI` est défini dans l'environnement, même vide.
+11. **Les clés de `jetons`** sont des chaînes (`"12"`).
